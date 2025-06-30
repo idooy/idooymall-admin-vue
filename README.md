@@ -21,6 +21,13 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
 4. 删除assets中的vue.svg
 这样就可以得到一个干净的项目目录结构。在此基础上进行开发。
 
+# vscode导入异常
+使用import进行导入导入时，报如下类似错误
+`Cannot find module 'vue' or its corresponding type declarations.ts(2307)`
+**解决方法：**
+1、 对vscode进行如下配置：vue>server:hybrid Mode配置项为true
+2、 搜索输入：>select typescript version,选择Use Workspace Version...
+
 # 安装路由
 `npm install vue-router`
 
