@@ -28,6 +28,8 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
 1、 对vscode进行如下配置：vue>server:hybrid Mode配置项为true
 2、 搜索输入：>select typescript version,选择Use Workspace Version...
 
+# 项目启动浏览器自动打开
+使用脚本`vite --open`,在package.json中配置
 
 
 # vite配置别名

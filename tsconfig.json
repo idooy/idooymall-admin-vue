@@ -1,12 +1,8 @@
 {
   "files": [],
   "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
+    {"path": "./tsconfig.app.json"},
+    {"path": "./tsconfig.node.json"}
   ],
   // ts支持vite别名配置
   "compilerOptions": {
