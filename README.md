@@ -66,5 +66,10 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
     }
   } 
 ```
+
+# 项目集成element-plus
+
+
+
 # 安装路由
 `npm install vue-router`
