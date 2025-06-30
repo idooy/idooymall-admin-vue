@@ -28,14 +28,14 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
 1、 对vscode进行如下配置：vue>server:hybrid Mode配置项为true
 2、 搜索输入：>select typescript version,选择Use Workspace Version...
 
-# 安装路由
-`npm install vue-router`
+
 
 # vite配置别名
 1、 安装依赖项，必须安装 @types/node 以解决 path 模块类型声明问题：
 `npm install @types/node --save-dev`
 2、 配置vite.config.ts
 ```ts
+  import path from 'path'
   // 配置别名，如果使用了typescript，需要配置tsconfig.js文件，确保 compilerOptions 字段中存在 baseUrl 和 paths 属性
   resolve: {
     alias: {
@@ -64,3 +64,5 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
     }
   } 
 ```
+# 安装路由
+`npm install vue-router`

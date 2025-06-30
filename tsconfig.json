@@ -1,7 +1,21 @@
 {
   "files": [],
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  // ts支持vite别名配置
+  "compilerOptions": {
+    // baseUrl 指定了用于解析非相对模块名的基目录
+    // 设置基路径为 tsconfig.json 所在目录 
+    "baseUrl": ".",
+    //  paths 则定义了路径映射
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
 }
