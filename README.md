@@ -68,8 +68,14 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
 ```
 
 # 项目集成element-plus
+[官方，安装和快速开始](https://cn.element-plus.org/zh-CN/guide/installation.html)
 
+# 环境变量配置
+环境变量配置在vite文档中，[官方文档-环境变量](https://cn.vite.dev/guide/env-and-mode.html)
 
+# SVG矢量图
+1、 安装SVG依赖的插件
+`npm install vite-plugin-svg-icons -D`
 
 # 安装路由
 `npm install vue-router`
