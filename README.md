@@ -223,5 +223,24 @@ app.use(globalComponent)
 ```
 这样就可以在项目任何需要使用SvgIcon组件的地方之间使用组件标签，而不需要繁琐的局部import
 
+# 集成sass
+1、 安装`npm install sass -D`
+
+## 配置sass的全局变量
+1、 创建src/styles/variable.scss,在里边定义全局变量
+2、 vite.config.ts中进行scss全局变量的相关配置
+```ts
+ //scss全局变量配置
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // additionalData: `@import "@/styles/variable.scss";`,
+        additionalData: `@use "@/styles/variable.scss" as *;`,
+      },
+    },
+  }
+
+```
+
 # 安装路由
 `npm install vue-router`

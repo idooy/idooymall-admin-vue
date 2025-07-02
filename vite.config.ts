@@ -20,5 +20,14 @@ export default defineConfig({
       // __dirname 是一个 Node.js 的全局变量，它指向当前执行脚本所在的目录，path.resolve 方法用于将路径或路径段解析为绝对路径。
       '@': path.resolve(__dirname, 'src'),
     }
+  },
+  //scss全局变量配置
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // additionalData: `@import "@/styles/variable.scss";`,
+        additionalData: `@use "@/styles/variable.scss" as *;`,
+      },
+    },
   }
 })
