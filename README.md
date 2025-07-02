@@ -242,5 +242,47 @@ app.use(globalComponent)
 
 ```
 
+# Mock
+[官网文档](https://www.npmjs.com/package/vite_mock_plugin)
+项目中没有使用mock，直接编写后端接口
+
+# axios二次封装
+1、 安装`npm install axios`
+**为什么需要二次封装，主要为了使用请求和响应拦截器**
+src/utils/request.ts
+```ts
+// 基础配置模板
+//进行axios二次封装，使用请求和响应拦截器
+import axios from 'axios'
+
+//1 利用axios对象的create方法，创建axios实例：配置基础路径，超时时间
+const request = axios.create({
+  //基础路径
+  baseURL: import.meta.env.VITE_APP_BASE_API, //基础路径上会携带/api
+  timeout: 5000, //超时时间
+})
+//2 request 实例添加请求与响应拦截器
+request.interceptors.request.use((config) => {
+
+  //config配置对象，headers属性请求头，经常给服务器端携带公共参数
+  //返回配置对象
+  return config
+})
+//3 响应拦截器
+request.interceptors.response.use(
+  (response) => {
+    //成功回调
+    //简化数据
+    return response.data
+  },
+  (error) => {
+    //失败的回调，处理http网络错误的
+    //变量存储网络错误信息
+    return Promise.reject(error)
+  },
+)
+```
+
+
 # 安装路由
 `npm install vue-router`
