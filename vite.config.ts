@@ -5,11 +5,15 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(),
-  createSvgIconsPlugin({
-    iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
-    symbolId: 'icon-[dir]-[name]'
-  })],
+  plugins: [
+    vue(),
+    createSvgIconsPlugin({
+      // 指定需要缓存的图标文件夹
+      iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+      // 指定symbolId格式
+      symbolId: 'icon-[dir]-[name]'
+    })
+  ],
   // 配置别名，如果使用了typescript，需要配置tsconfig.js文件，确保 compilerOptions 字段中存在 baseUrl 和 paths 属性
   resolve: {
     alias: {

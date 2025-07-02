@@ -133,18 +133,77 @@ error TS7016: Could not find a declaration file for module 'XXX'.
 环境变量配置在vite文档中，[官方文档-环境变量](https://cn.vite.dev/guide/env-and-mode.html)
 
 # SVG矢量图
+[官方文档](https://gitcode.com/gh_mirrors/vi/vite-plugin-svg-icons/blob/main/README.zh_CN.md?utm_source=csdn_github_accelerator#vite-plugin-svg-icons)
 1、 安装SVG依赖的插件
-`npm install vite-plugin-svg-icons -D`
-**自定义插件将SVG组件注册为全局组件**
-1、 定义自定义插件
+`npm install vite-plugin-svg-icons -D` 和 `npm i fast-glob -D`
+2、main.ts文件中引入该插件
+```ts
+import 'virtual:svg-icons-register';
+```
+但是vscode会报如下错误
+```ts
+Cannot find module 'virtual:svg-icons-register' or its corresponding type declarations
+```
+如果出现该错误可尝试在vite-env.d.ts文件中添加如下配置
+```ts
+declare module 'virtual:svg-icons-register' {
+    const content: any;
+    export default content;
+}
+declare module 'virtual:svg-icons-names' {
+    // eslint-disable-next-line
+    const iconsNames: string[]
+    export default iconsNames
+}
+```
+## 如何在组件使用 
+**Vue 方式**
+
+`/src/components/SvgIcon.vue`
+
+```vue
+<template>
+  <svg aria-hidden="true">
+    <use :xlink:href="symbolId" :fill="color" />
+  </svg>
+</template>
+
+<script>
+import { defineComponent, computed } from 'vue'
+
+export default defineComponent({
+  name: 'SvgIcon',
+  props: {
+    prefix: {
+      type: String,
+      default: 'icon',
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    color: {
+      type: String,
+      default: '#333',
+    },
+  },
+  setup(props) {
+    const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+    return { symbolId }
+  },
+})
+</script>
+```
+## 将SvgIcon注册为全局组件
+1、 定义自定义插件(inject.component.plugin.ts)
 ```ts
 /**注册自定义全局组件 */
-import Svg from '@/components/Svg.vue'
+import SvgIcon from '@/components/SvgIcon.vue'
 import { App, Component } from 'vue'
 
 // 如果想把自定义组件注册为全局组件，就应该添加为该对象的属性
 // 解构语法
-const globalComponents: Component= {Svg}
+const globalComponents: Component= {SvgIcon}
 
 
 // 暴露自定义插件对象
@@ -162,5 +221,7 @@ import globalComponent from '@/components/inject.global.component.plugin.ts'
 // 安装自定义插件
 app.use(globalComponent)
 ```
+这样就可以在项目任何需要使用SvgIcon组件的地方之间使用组件标签，而不需要繁琐的局部import
+
 # 安装路由
 `npm install vue-router`

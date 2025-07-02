@@ -13,12 +13,13 @@ app.use(ElementPlus,{
   // 国际化配置
   locale: zhCn,
 })
-import globalComponent from '@/components/inject.global.component.plugin.ts'
+// svg插件
+import 'virtual:svg-icons-register'
 // 安装自定义插件
+import globalComponent from '@/components/inject.component.plugin'
 app.use(globalComponent)
 
-// svg插件
-// import 'virtual:svg-icons-register' 
+
 
 app.mount('#app')
     
