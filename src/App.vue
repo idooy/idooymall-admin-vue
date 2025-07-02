@@ -4,19 +4,10 @@
 
 <template>
   <div>
-   <el-button type="primary">init</el-button>
-   <div class="demo-pagination-block">
-
-    
-    <div class="demonstration">All combined</div>
-    <el-pagination
-
-      :page-sizes="[100, 200, 300, 400]"
+    <svg style="width: 32px;height: 32px;">
+      <use xlink:href="#icon-home" fill="red"></use>
+    </svg>
   
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-    />
-  </div>
   </div>
 
 </template>

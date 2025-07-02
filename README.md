@@ -33,21 +33,23 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
 
 
 # vite配置别名
+[如果在编辑器中文件路径导入出现红色波浪线，该博客有详细的解决方案](https://blog.csdn.net/snans/article/details/143361702)
 1、 安装依赖项，必须安装 @types/node 以解决 path 模块类型声明问题：
 `npm install @types/node --save-dev`
-2、 配置vite.config.ts
+2、 vite.config.ts文件中添加如下配置项，这里解决的是vue文件中正确使用别名
 ```ts
   import path from 'path'
   // 配置别名，如果使用了typescript，需要配置tsconfig.js文件，确保 compilerOptions 字段中存在 baseUrl 和 paths 属性
   resolve: {
     alias: {
       // __dirname 是一个 Node.js 的全局变量，它指向当前执行脚本所在的目录，path.resolve 方法用于将路径或路径段解析为绝对路径。
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, 'src'),
       // 扩展别名示例
       'utils': path.resolve(__dirname, 'src/utils') 
     }
   }
 ```
+
 3、 如果使用了ts,则还需要配置tsconfig.json,以确保 TypeScript 编译器能够正确地解析这些别名
 ```ts
 // ts支持vite别名配置
@@ -66,6 +68,63 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
     }
   } 
 ```
+**tsconfig.json原始配置如下：**
+```json
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+    }
+  }
+}
+```
+到这里vscode不管在vue还是ts文件中，在使用别名进行import时，会出现红色波浪线。提示
+error TS7016: Could not find a declaration file for module 'XXX'.
+ 'XXX' implicitly has an 'any' type.
+ 这时还需要修改tsconfig.app.json中为如下内容：
+ ```json
+{
+  "extends": "./tsconfig.json", // 继承自tsconfig.json
+
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "preserve",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
+
+ ```
+                        
 
 # 项目集成element-plus
 [官方，安装和快速开始](https://cn.element-plus.org/zh-CN/guide/installation.html)
@@ -76,6 +135,32 @@ Vite 需要 Node.js 版本 20.19+, 22.12+。然而，有些模板需要依赖更
 # SVG矢量图
 1、 安装SVG依赖的插件
 `npm install vite-plugin-svg-icons -D`
+**自定义插件将SVG组件注册为全局组件**
+1、 定义自定义插件
+```ts
+/**注册自定义全局组件 */
+import Svg from '@/components/Svg.vue'
+import { App, Component } from 'vue'
 
+// 如果想把自定义组件注册为全局组件，就应该添加为该对象的属性
+// 解构语法
+const globalComponents: Component= {Svg}
+
+
+// 暴露自定义插件对象
+export default{
+    install(app: App){
+        Object.keys(globalComponents).forEach((key)=>{
+            app.component(key,globalComponents[key])
+        })
+    }
+}
+```
+2、在入口文件(main.ts)中对插件进行安装
+```ts
+import globalComponent from '@/components/inject.global.component.plugin.ts'
+// 安装自定义插件
+app.use(globalComponent)
+```
 # 安装路由
 `npm install vue-router`
