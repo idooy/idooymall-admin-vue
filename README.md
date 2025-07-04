@@ -225,6 +225,12 @@ app.use(globalComponent)
 
 # 集成sass
 1、 安装`npm install sass -D`
+## 项目中如何清除默认样式
+方式一、借助normalize.css，下载安装并在main.ts文件中引入；
+1、 `npm install normalize.css`
+2、 `import 'normalize.css'`
+方式二、借助src/styles/reset.scss(自定义内容)，这样可以更彻底的进行样式重置。
+当前项目使用的就是此方式。记得在main.ts中进行引入`import '@/styles/index.scss'`
 
 ## 配置sass的全局变量
 1、 创建src/styles/variable.scss,在里边定义全局变量
@@ -244,7 +250,28 @@ app.use(globalComponent)
 
 # Mock
 [官网文档](https://www.npmjs.com/package/vite_mock_plugin)
-项目中没有使用mock，直接编写后端接口
+1、安装依赖
+`npm i mockjs vite-plugin-mock --save-dev`
+2、 vite.config.ts添加如下配置
+```ts
+import { viteMockServe } from 'vite-plugin-mock'
+
+export default defineConfig(({ command }) => {
+  
+  return {
+    plugins: [
+      vue(),
+      ...
+      // mock配置
+      viteMockServe({
+        mockPath: 'mock', // mock文件夹路径
+        enable: command === 'serve' // 只有开发环境才开启mock
+      })
+    ]
+  }
+})  
+```
+3、在项目的根路径下添加mock文件夹存放mock文件
 
 # axios二次封装
 1、 安装`npm install axios`

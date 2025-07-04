@@ -1,8 +1,8 @@
 <template>
-  <!-- 测试svg全局组件 -->
   <div>
-    <svg-icon name="home" color="red"></svg-icon>
-    <h1>测试sass</h1>
+    <!-- 路由出口 -->
+    <!-- 路由匹配到的组件将渲染在这里 -->
+    <router-view></router-view>
   </div>
 
 </template>
@@ -10,15 +10,10 @@
 
 <script setup lang="ts">
 
-
 </script>
 
 
 
 <style scoped lang="scss">
- div{
-  h1{
-    color: $color;
-  }
- }
+
 </style>

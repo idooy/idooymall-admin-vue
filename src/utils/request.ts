@@ -1,65 +1,88 @@
 //进行axios二次封装，使用请求和响应拦截器
 import axios from 'axios'
+import { error } from 'console'
 import { ElMessage } from 'element-plus'
 //引入用户仓库
 // import useUserStore from '@/store/modules/user'
 
 //1 利用axios对象的create方法，创建axios实例：配置基础路径，超时时间
 const request = axios.create({
+
   //基础路径
-  baseURL: import.meta.env.VITE_APP_BASE_API, //基础路径上会携带/api
-  timeout: 5000, //超时时间
+  baseURL: import.meta.env.VITE_SERVE_URL,
+  timeout: 5000,
 })
 //2 request 实例添加请求与响应拦截器
 request.interceptors.request.use((config) => {
   //获取用户相关的小仓库：token,登录成功后携带给服务器
-//   const userStore = useUserStore()
+  //   const userStore = useUserStore()
   // console.log(userStore.token)
-//   if (userStore.token) {
-//     config.headers.token = userStore.token
-//   }
+  //   if (userStore.token) {
+  //     config.headers.token = userStore.token
+  //   }
 
   //config配置对象，headers属性请求头，经常给服务器端携带公共参数
   //返回配置对象
+  console.log(config)
   return config
 })
 //3 响应拦截器
 request.interceptors.response.use(
   (response) => {
     //成功回调
-    //简化数据
-    return response.data
-  },
-  (error) => {
-    //失败的回调，处理http网络错误的
-    //变量存储网络错误信息
-    let message = ''
-    const status = error.response.status
-    switch (status) {
-      case 401:
-        message = 'TOKEN过期'
-        break
-      case 403:
-        message = '无权访问'
-        break
-      case 404:
-        message = '请求地址错误'
-        break
-      case 500:
-        message = '服务器出现问题'
-        break
-      default:
-        message = '网络出现问题'
-        break
+    if (response.status === 200) {
+      return Promise.resolve(response.data)
+    } else {
+      return Promise.reject(response)
     }
-    //提示错误信息
-    ElMessage({
-      type: 'error',
-      message,
-    })
-
-    return Promise.reject(error)
-  },
+  }, (error) => {
+    // 对响应错误做点什么
+    if (error && error.response) {
+      switch (error.response.status) {
+        case 400:
+          error.message = '错误请求';
+          break;
+        case 401:
+          error.message = '未授权，请重新登录';
+          break;
+        case 403:
+          error.message = '拒绝访问';
+          break;
+        case 404:
+          error.message = '请求错误,未找到该资源';
+          break;
+        case 405:
+          error.message = '请求方法未允许';
+          break;
+        case 408:
+          error.message = '请求超时';
+          break;
+        case 500:
+          error.message = '服务器端出错';
+          break;
+        case 501:
+          error.message = '网络未实现';
+          break;
+        case 502:
+          error.message = '网络错误';
+          break;
+        case 503:
+          error.message = '服务不可用';
+          break;
+        case 504:
+          error.message = '网络超时';
+          break;
+        case 505:
+          error.message = 'http版本不支持该请求';
+          break;
+        default:
+          error.message = `未知错误${error.response.status}`;
+      }
+    } else {
+      error.message = "连接到服务器失败";
+    }
+    return Promise.reject(error);
+  }
 )
 
 
