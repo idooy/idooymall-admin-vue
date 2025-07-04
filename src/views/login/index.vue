@@ -28,14 +28,19 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
-import { ElNotification } from 'element-plus'
 import { login } from '@/api/sys/login.ts'
 import type { FormInstance, FormRules } from 'element-plus'
+import {userModuleStore} from '@/store/user.ts'
+import {useRouter} from 'vue-router'
+
+let $router = useRouter()
+// 拿到user module的小仓库配置
+
 
 const loginRuleFormRef = ref<FormInstance>()
 
 //表单数据
-let loginForm = reactive({ username: 'admin', password: '111111' })
+let loginForm = reactive({ username: 'admin', password: '123456' })
 
 //定义表单校验对象，:rules="validator"与表单进行绑定
 const validator = reactive<FormRules<typeof loginForm>>({
@@ -69,7 +74,13 @@ const submitLoginForm = async (formEl: FormInstance | undefined) => {
   formEl.validate((valid) => {
     if (valid) {
       // 校验通过，发送登录请求
-      login(loginForm)
+      login(loginForm).then((res) => {
+        const userToken = res.data.token
+        // 将token持久化存储
+        userModuleStore().registryToken(userToken)
+        // 路由
+        $router.push('/layout')
+      })
     }
   })
 }
@@ -84,6 +95,7 @@ const submitLoginForm = async (formEl: FormInstance | undefined) => {
   height: 607px;
   background: url('@/assets/images/background.jpg') no-repeat;
   background-size: cover;
+  overflow: auto;
 
   .form_container {
     position: absolute;
@@ -98,12 +110,6 @@ const submitLoginForm = async (formEl: FormInstance | undefined) => {
   }
 
   .login_form {
-    // position: relative;
-
-    // // background: url('@/assets/images/login_form.png') no-repeat;
-    // background-size: cover;
-    // padding: 40px;
-
     h1 {
       color: white;
       font-size: 40px;

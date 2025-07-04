@@ -1,6 +1,5 @@
 //进行axios二次封装，使用请求和响应拦截器
 import axios from 'axios'
-import { error } from 'console'
 import { ElMessage } from 'element-plus'
 //引入用户仓库
 // import useUserStore from '@/store/modules/user'
@@ -23,16 +22,20 @@ request.interceptors.request.use((config) => {
 
   //config配置对象，headers属性请求头，经常给服务器端携带公共参数
   //返回配置对象
-  console.log(config)
   return config
 })
 //3 响应拦截器
 request.interceptors.response.use(
   (response) => {
-    //成功回调
-    if (response.status === 200) {
+    //成功回调，响应状态码和业务状态码双重验证
+    if (response.status === 200 && response.data.code === 2000) {
       return Promise.resolve(response.data)
     } else {
+      let msg = response.data.message
+      ElMessage({
+        type: 'warning',
+        message: msg
+      })
       return Promise.reject(response)
     }
   }, (error) => {
@@ -81,6 +84,11 @@ request.interceptors.response.use(
     } else {
       error.message = "连接到服务器失败";
     }
+    ElMessage({
+      type: "error",
+      message: error.data.message
+    })
+
     return Promise.reject(error);
   }
 )

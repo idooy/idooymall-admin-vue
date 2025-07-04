@@ -19,16 +19,16 @@ export default [
             // 没有用户则返回失败信息
             if (!checkUser) {
                 return {
-                    code: 201,
-                    data: {
-                        message: '账号或者密码不正确'
-                    }
+                    code: 4001,
+                    message: '账号或密码不正确',
+                    data: {}
                 }
             }
             // 如果有返回成功信息
             const { token } = checkUser
             return {
-                code: 200,
+                code: 2000,
+                message:'seccuss',
                 data: {
                     token
                 }

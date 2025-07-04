@@ -313,3 +313,49 @@ request.interceptors.response.use(
 
 # 安装路由
 `npm install vue-router`
+
+
+
+
+# pinia的使用
+实现任意组件之间的通信，
+核心概念：state\actions\getters
+
+1、 安装pinia`npm install pinia`
+2、 创建一个 pinia 实例 (根 store) 并将其传递给应用：
+```ts
+// amin.ts
+import { createPinia } from 'pinia'
+// 创建一个pinia实例
+const pinia = createPinia()
+app.use(pinia)
+```
+**之后在项目中该如何使用呢**
+1、在src下创建store目录，之后可以在此目录下根据业务需求以文件的形式创建每一块业务模块的小仓库。
+```ts
+import { defineStore } from "pinia";
+
+// 创建一个名为 user_store 的仓库，返回的是一个函数
+export const  userModuleStore = defineStore('user_store', {
+
+    // 为了完整类型推理，推荐使用箭头函数
+    state: () => {
+        return {
+            // 所有这些属性都将自动推断出它们的类型
+            // 初始化是登录成功后直接给的，之后的每次都从本地存储中获取
+            token: localStorage.getItem('user_token')
+        }
+    },
+    // actions 属性它们也是定义业务逻辑的完美选择，相当于组件中的 method
+    actions: {
+        registryToken(token:string){
+            this.token = token
+            localStorage.setItem("user_token",token)
+        }
+    }
+})
+
+
+```
+2、 最后在组件中引用所需的小仓库即可
+

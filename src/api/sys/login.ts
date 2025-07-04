@@ -7,7 +7,7 @@ enum API{
 
 // 登录
 export const login = (data:loginFormData)=>{
-    request.post<any,loginResponseData>(API.LOGIN_API,data)
+    return request.post<any,loginResponseData>(API.LOGIN_API,data)
 }
 
 // 第二种写法

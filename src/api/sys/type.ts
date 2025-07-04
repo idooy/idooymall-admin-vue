@@ -9,11 +9,13 @@ export interface loginFormData {
 export interface ResponseData {
   code: number
   message: string
-  ok: boolean
+  data: object
 }
 //登录接口返回数据类型
 export interface loginResponseData extends ResponseData {
-  data: string
+  data: {
+    token: string
+  }
 }
 
 //用户信息返回的数据类型
