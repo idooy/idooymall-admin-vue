@@ -1,5 +1,6 @@
+<!-- 系统界面展示区域，可以是项目的名称或者公司的logo等等 -->
 <template>
-    <div class="box">
+    <div class="display-box">
         <img v-if="!setting.logo.hidden" :src="setting.logo.src" alt="" />
         <span>{{ setting.item_title }}</span>
     </div>
@@ -17,14 +18,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.box {
-    width: 100%;
+.display-box {
+    display: flex;
+    width: $menu-width;
     height: $menu-top-box-height;
     color: white;
-    display: flex;
     align-items: center;
     padding: 10px;
-    background-color: $menu-top-box-background-color;
+    background-color: $menu-text-active-color;
+    background: linear-gradient(to right, $menu-text-active-color, #aecdfc);
+    // transition: all 0.3s;
     img {
         width: 40px;
         height: 40px;

@@ -3,17 +3,17 @@
 /**===================layout top===============================*/
 
 //顶部导航的高度
-$base-tabbar-height:50px;
+$tabbar-height:42px;
 
 //左侧菜单宽度
 $menu-width: 260px;
 //左侧菜单背景颜色
-$menu-background-color: #6070f8;
-$menu-min-width: 50px;
-
+$menu-background-color: #f7f8fc;
+$menu-min-width: 42px;
+$menu-text-active-color:#409eff;
 
 //左侧菜单logo高度
-$menu-top-box-height:50px;
+$menu-top-box-height:42px;
 $menu-top-box-background-color:#5666f7;
 
 //左侧菜单logo右侧文字大小

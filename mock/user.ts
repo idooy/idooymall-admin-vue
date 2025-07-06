@@ -45,7 +45,7 @@ export default [
             // 没有就返回失败信息
             if (!checkUser) {
                 return {
-                    code: 201,
+                    code: 2001,
                     data: {
                         message: '获取用户信息失败'
                     }
@@ -53,7 +53,7 @@ export default [
             }
             // 有就返回成功信息
             return {
-                code: 200,
+                code: 2000,
                 data: {
                     checkUser
                 }

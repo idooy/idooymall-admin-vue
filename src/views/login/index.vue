@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
-import { login } from '@/api/sys/login.ts'
+import { login } from '@/api/user/login'
 import type { FormInstance, FormRules } from 'element-plus'
 import {userModuleStore} from '@/store/user.ts'
 import {useRouter} from 'vue-router'
@@ -79,7 +79,7 @@ const submitLoginForm = async (formEl: FormInstance | undefined) => {
         // 将token持久化存储
         userModuleStore().registryToken(userToken)
         // 路由
-        $router.push('/layout')
+        $router.push({path:'/layout'})
       })
     }
   })

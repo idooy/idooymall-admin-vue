@@ -1,7 +1,7 @@
 import { createUserList } from "./user.ts"
 
 enum SYS_API{
-    LOGIN_URL='/sys/login'
+    LOGIN_URL='/user/login'
 }
 
 export default [

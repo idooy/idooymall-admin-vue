@@ -1,7 +1,7 @@
-// 用户可以在这里对项目进行相关的自定义设置
+// 用户对项目的自定义设置可以在此文件中进行配置
 export default {
   //项目的标题
-  item_title: 'Idooymall后台管理系统', 
+  item_title: 'Idooymall管理运营', 
   //项目logo设置
   logo:{
     src: '',
