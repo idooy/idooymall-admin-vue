@@ -1,19 +1,11 @@
 <template>
-    <div>Role页面</div>
+  <div>
+    <h1>角色管理</h1>
+  </div>
 </template>
 
-
-
-<script setup lang='ts'>
-
+<script>
+export default {}
 </script>
 
-<script lang='ts'>
-export default {
-    name: 'Role',
-}
-</script>
-
-<style scoped>
-
-</style>
+<style></style>

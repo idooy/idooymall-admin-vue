@@ -35,7 +35,7 @@ import 'virtual:svg-icons-register'
 /**注册全局组件===bottom */
 
 /**全局路由守卫===top */
-import '@/router/permisstion.ts'
+import '@/permisstion'
 /**全局路由守卫===bottom */
 /**vue-router===top */
 import {router} from '@/router/index.ts'

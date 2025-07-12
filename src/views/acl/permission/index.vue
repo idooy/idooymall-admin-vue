@@ -1,19 +1,11 @@
 <template>
-    <div>Permission页面</div>
+  <div>
+    <h1>菜单管理</h1>
+  </div>
 </template>
 
-
-
-<script setup lang='ts'>
-
+<script>
+export default {}
 </script>
 
-<script lang='ts'>
-export default {
-    name: 'Permission',
-}
-</script>
-
-<style scoped>
-
-</style>
+<style></style>

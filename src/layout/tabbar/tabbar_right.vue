@@ -5,22 +5,18 @@
     <el-button type="primary" icon="Setting" circle />
   </div>
   <div class="tabbar-right-user">
-    <el-avatar :size="32" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" />
+    <el-avatar :size="32" :src="userStore.avatar" />
     <!-- 下拉菜单 -->
     <el-dropdown>
       <span class="el-dropdown-link">
-        Dropdown Listddddd
+        {{userStore.username}}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>Action 1</el-dropdown-item>
-          <el-dropdown-item>Action 2</el-dropdown-item>
-          <el-dropdown-item>Action 3</el-dropdown-item>
-          <el-dropdown-item disabled>Action 4</el-dropdown-item>
-          <el-dropdown-item divided>Action 5</el-dropdown-item>
+          <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -28,14 +24,13 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter} from 'vue-router'
 //用户小仓库
 import { userModuleStore } from '@/store/user.ts'
 let userStore = userModuleStore()
 //获取路由器对象
 let $router = useRouter()
-//获取路由对象
-let $route = useRoute()
+
 //获取骨架的小仓库
 // import useLayOutSettingStore from '@/store/modules/setting'
 // let layoutSettingStore = useLayOutSettingStore()
@@ -48,7 +43,6 @@ let $route = useRoute()
 const fullScreen = () => {
   //DOM的属性：判断是否全屏，true全屏，null就是非全屏
   //不同浏览器有不同，有插件实现
-  console.log(document.fullscreenElement)
   let full = document.fullscreenElement
   //切换为全屏模式
   if (!full) {
@@ -61,14 +55,14 @@ const fullScreen = () => {
 }
 
 //退出登录点击回调
-const logout = async () => {
+const logout =async () => {
   //第一件事情：需要向服务器发请求【退出登录接口】
   //第二件事情：仓库当中关于用户相关数据清空[token,username,avatar]
   //第三件事情：跳转到登录页面
   await userStore.userLogout()
   // alert(123)
   //跳转到登录页面
-  $router.push({ path: '/login', query: { redirect: $route.path } })
+  $router.push({ path: '/login'})
 }
 </script>
 

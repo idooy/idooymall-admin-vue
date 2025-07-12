@@ -28,19 +28,22 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
-import { login } from '@/api/user/login'
+import { reqLogin } from '@/api/user/login'
 import type { FormInstance, FormRules } from 'element-plus'
-import {userModuleStore} from '@/store/user.ts'
-import {useRouter} from 'vue-router'
+import { userModuleStore } from '@/store/user.ts'
+import { useRouter } from 'vue-router'
+import { encryption } from '@/utils/rsa_util'
 
 let $router = useRouter()
+let userStore = userModuleStore()
 // 拿到user module的小仓库配置
 
 
 const loginRuleFormRef = ref<FormInstance>()
 
 //表单数据
-let loginForm = reactive({ username: 'admin', password: '123456' })
+let loginForm = reactive({ username: 'idooy', password: '123456' })
+
 
 //定义表单校验对象，:rules="validator"与表单进行绑定
 const validator = reactive<FormRules<typeof loginForm>>({
@@ -67,28 +70,31 @@ const validator = reactive<FormRules<typeof loginForm>>({
   }],
 })
 
+
 // 提交登录表单数据，并在提交前进行数据校验
 // https://cn.element-plus.org/zh-CN/component/form.html
-const submitLoginForm = async (formEl: FormInstance | undefined) => {
+const submitLoginForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      // 校验通过，发送登录请求
-      login(loginForm).then((res) => {
-        const userToken = res.data.token
+      // 对密码进行加密后进行登录
+      await encryption(loginForm.password).then(cryptPwd =>{
+          return reqLogin({
+            "username": loginForm.username,
+            "password": cryptPwd
+          })
+      }).then((userToken) => {
         // 将token持久化存储
-        userModuleStore().registryToken(userToken)
+        userStore.registryToken(userToken)
         // 路由
-        $router.push({path:'/layout'})
+        $router.push({ path: '/layout' })
       })
     }
   })
 }
-
-
-
 </script>
 <!-- ==========================================TS BOTTOM=============================================== -->
+
 <style scoped lang="scss">
 .login_container {
   width: 1280px;

@@ -9,7 +9,7 @@ export const createUserList = () => {
     return [
         {
             userId: 1,
-            avatar: 'https://pic1.zhimg.com/80/v2-083faf550543c1e9f134b56b3322ee3c_720w.webp',
+            avatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
             username: 'admin',
             password: '123456',
             desc: '下船不谈船里事',
@@ -20,7 +20,7 @@ export const createUserList = () => {
         },
         {
             userId: 2,
-            avatar: 'https://pic1.zhimg.com/80/v2-e1427f6a21122ac163ff98d24f55d372_720w.webp',
+            avatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
             username: 'system',
             password: '123456789',
             desc: '旧人不谈近况，新人不讲过往',
@@ -54,9 +54,7 @@ export default [
             // 有就返回成功信息
             return {
                 code: 2000,
-                data: {
-                    checkUser
-                }
+                data: checkUser
             }
         }
     }
