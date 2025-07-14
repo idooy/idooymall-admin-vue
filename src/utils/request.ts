@@ -3,6 +3,9 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 //引入用户仓库
 import {userModuleStore} from '@/store/user.ts'
+import { useRouter } from 'vue-router'
+
+// const $router = useRouter()
 
 //1 利用axios对象的create方法，创建axios实例：配置基础路径，超时时间
 const request = axios.create({
@@ -30,7 +33,12 @@ request.interceptors.response.use(
     //成功回调，响应状态码和业务状态码双重验证
     if (response.status === 200 && response.data.code === 2000) {
       return Promise.resolve(response.data.data)
-    } else {
+    }else if(response.status === 200 && response.data.code === 5001 ){
+      // 5001是token过期
+      // axios中使用router报：[Vue warn]: inject() can only be used inside setup() or functional component
+      // $router.push({ path: '/login'})
+      return Promise.reject(response)
+    }else {
       let msg = response.data.message
       ElMessage({
         type: 'warning',

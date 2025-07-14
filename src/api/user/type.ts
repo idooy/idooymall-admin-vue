@@ -8,25 +8,22 @@ export interface userListRequestData {
 
 // 系统用户列表查询响应的数据结构
 export interface userListResponseData {
-  page: {
-    totalCount: number,
-    pageSize: number,
-    totalPage: number,
-    currPage: number,
-    list: userList
-  }
-
+  totalCount: number,
+  pageSize: number,
+  totalPage: number,
+  currPage: number,
+  list: userList
 }
 
 /**
  * 列表展示的每个用户数据
  */
 export interface userData {
-  userId: 1,
+  userId: string,
   username: string,
   email: string,
   mobile: string,
-  status: string,
+  status: number,
   avatar: string,
   createUserId: string,
   createTime: string
@@ -48,4 +45,10 @@ export interface userInfoResponseData {
   roles: string[]
   username: string
   avatar: string
+}
+
+export interface userAddModifyFormData {
+  username: string,
+  email: string,
+  mobile: string
 }

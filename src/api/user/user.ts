@@ -1,15 +1,42 @@
 import request from '@/utils/request.ts'
 import type {
     userInfoResponseData,
-    userListResponseData
+    userListResponseData,
+    userAddModifyFormData
 } from '@/api/user/type'
+import { url } from 'inspector'
+import path from 'path'
 
 enum API {
     USER_RESOURCE_URL = '/users'
 }
 
+
+export const reqDeleteUser = (ids:Array<number>)=>{
+    return request.delete(`${API.USER_RESOURCE_URL}`,{data:ids})
+}
+
 /**
- * request header 中携带了token
+ *  修改用户数据
+ * @param userData 
+ * @returns 
+ */
+export const reqModifyUser = (userData:userAddModifyFormData)=>{
+    return request.put(`${API.USER_RESOURCE_URL}`,userData)
+}
+
+
+/**
+ * 添加用户信息
+ * @param userData 
+ * @returns 
+ */
+export const reqAddUser = (userData:userAddModifyFormData)=>{
+    return request.post(`${API.USER_RESOURCE_URL}`,userData)
+}
+
+/**
+ * 查询指定id的用户信息，如果id=0查询当前系统用户信息
  * @returns userInfoResponseData
  */
 export const reqUserInfo = (uid:number) => {
@@ -20,7 +47,14 @@ export const reqUserInfo = (uid:number) => {
  * @param data 
  * @returns 
  */
-export const reqUserList =(pageNum:number,pageSize:number)=>{
-    return request.get<any,userListResponseData>(`${API.USER_RESOURCE_URL}/${pageNum}/${pageSize}`)
+export const reqUserList =(pageNum:number,pageSize:number,username:string)=>{
+    return request.get<any,userListResponseData>(
+        `${API.USER_RESOURCE_URL}/${pageNum}/${pageSize}`,
+        {
+            params:{
+                username
+            }
+        }
+    )
 }
 
