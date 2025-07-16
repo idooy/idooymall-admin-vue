@@ -16,7 +16,7 @@
             :collapse="layoutStore.fold"
             :router="true">
             <!-- 根据路由动态生成菜单,给组件传值过去-->
-            <Menu :menuList="userStore.menuRoutes"></Menu>
+            <Menu :menuList="user_store.menuRoutes"></Menu>
           </el-menu>
         </el-scrollbar>
       </div>
@@ -51,10 +51,9 @@ import Main from '@/layout/main.vue'
 import Tabbar from '@/layout/tabbar/index.vue'
 //获取layout配置仓库
 import { layoutSttingStore } from '@/store/layout_setting.ts'
+import { userStore } from '@/store/user'
 
-//获取用户相关的仓库
-import { userModuleStore } from '@/store/user.ts'
-let userStore = userModuleStore()
+const user_store = userStore()
 
 let layoutStore = layoutSttingStore()
 

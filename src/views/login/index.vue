@@ -1,51 +1,44 @@
 <template>
-  <div class="login_container">
-    <div class="form_container">
-      <el-row>
-        <!-- <el-col :span="12" :xs="0"></el-col> -->
-        <el-col :span="24" :xs="24">
-          <el-form class="login_form" :model="loginForm" :rules="validator" ref="loginRuleFormRef">
-            <h1>idooy-admin</h1>
-            <h2>idooymall管理系统</h2>
-            <el-form-item prop="username">
-              <el-input :prefix-icon="User" v-model="loginForm.username"></el-input>
-            </el-form-item>
-            <el-form-item prop="password">
-              <el-input type="password" :prefix-icon="Lock" v-model="loginForm.password" show-password></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button class="login_btn" type="primary" size="default" @click="submitLoginForm(loginRuleFormRef)">
-                登录
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </el-col>
-      </el-row>
-    </div>
-  </div>
+  <el-row class='container'>
+    <el-col :span="12"></el-col>
+    <el-col :span="12" class="right-col">
+      <el-card style="width: 380px;" shadow="always">
+        <template #header >
+          <div class="card-header" style="display: flex; justify-content: center;">
+            <span style="font-size: 24px; font-weight:700;margin:auto">idooymall管理系统</span>
+          </div>
+        </template>
+        <el-form :model="loginForm" :rules="validator" ref="loginRuleFormRef">
+          <el-form-item prop="username">
+            <el-input :prefix-icon="User" v-model="loginForm.username" placeholder="请输入账号"></el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input type="password" :prefix-icon="Lock" v-model="loginForm.password" show-password placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button style="width: 100%;" type="primary" @click="submitLoginForm(loginRuleFormRef)"> 登录 </el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </el-col>
+  </el-row>
 </template>
-<!-- ==========================================TS TOP=============================================== -->
+
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import { reqLogin } from '@/api/user/login'
 import type { FormInstance, FormRules } from 'element-plus'
-import { userModuleStore } from '@/store/user.ts'
+import { userStore } from '@/store/user.ts'
 import { useRouter } from 'vue-router'
-import { encryption } from '@/utils/rsa_util'
+import { encryption } from '@/utils/encrypt'
 
-let $router = useRouter()
-let userStore = userModuleStore()
-// 拿到user module的小仓库配置
-
-
+let router = useRouter()
+let user_store = userStore()
 const loginRuleFormRef = ref<FormInstance>()
-
 //表单数据
 let loginForm = reactive({ username: 'idooy', password: '123456' })
 
-
-//定义表单校验对象，:rules="validator"与表单进行绑定
 const validator = reactive<FormRules<typeof loginForm>>({
   username: [{
     validator: (rule: any, value: any, callback: any) => {
@@ -69,67 +62,36 @@ const validator = reactive<FormRules<typeof loginForm>>({
     trigger: 'change'
   }],
 })
-
-
-// 提交登录表单数据，并在提交前进行数据校验
-// https://cn.element-plus.org/zh-CN/component/form.html
+// 登录
 const submitLoginForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
     if (valid) {
-      // 对密码进行加密后进行登录
-      await encryption(loginForm.password).then(cryptPwd =>{
-          return reqLogin({
-            "username": loginForm.username,
-            "password": cryptPwd
-          })
-      }).then((userToken) => {
-        // 将token持久化存储
-        userStore.registryToken(userToken)
-        // 路由
-        $router.push({ path: '/layout' })
+      // 对密码进行加密后再发送登录请求
+      const cryptPwd:string = await encryption(loginForm.password)
+      reqLogin({"username": loginForm.username, "password": cryptPwd}).then(token=>{
+        user_store.registryToken(token)
+        router.push({ path: '/layout' })
       })
     }
   })
 }
 </script>
-<!-- ==========================================TS BOTTOM=============================================== -->
 
 <style scoped lang="scss">
-.login_container {
-  width: 1280px;
-  height: 607px;
+.container {
+  height: 100vh;
   background: url('@/assets/images/background.jpg') no-repeat;
   background-size: cover;
   overflow: auto;
 
-  .form_container {
-    position: absolute;
-    width: 380px;
-    height: 310px;
-    top: 20%;
-    right: 10%;
-    border-radius: 20px;
-    // background: url('@/assets/images/login_form.png') no-repeat;
-    background-color: #4e5ede;
-    padding: 40px;
-  }
-
-  .login_form {
-    h1 {
-      color: white;
-      font-size: 40px;
-    }
-
-    h2 {
-      color: white;
-      font-size: 20px;
-      margin: 20px 0px;
-    }
-
-    .login_btn {
-      width: 100%;
-    }
+  .right-col {
+    // background-color: red;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
+
 </style>

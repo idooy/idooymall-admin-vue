@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted,watch} from "vue"
+import { ref, reactive, onMounted} from "vue"
 import type { userList } from '@/api/user/type.ts'
 import { reqUserList,reqAddUser,reqModifyUser,reqDeleteUser } from "@/api/user/user.ts";
 import type { FormInstance, FormRules} from 'element-plus'

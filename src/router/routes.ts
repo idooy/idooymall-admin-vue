@@ -13,11 +13,11 @@ export const constantRoutes = [
         name: 'root',
         redirect: '/login'
     },
-    {
-        path: '/index',
-        name: 'Index',
-        redirect: '/login'
-    },
+    // {
+    //     path: '/index',
+    //     name: 'Index',
+    //     redirect: '/login'
+    // },
     {
         path: '/login',
         name: 'Login',
@@ -118,7 +118,7 @@ export const asyncRoutes = [
             },
             {
                 path: '/acl/permission',
-                component: () => import('@/views/acl/permission/index.vue'),
+                component: () => import('@/views/acl/menu/index.vue'),
                 name: 'Permission',
                 meta: {
                     title: '菜单管理',

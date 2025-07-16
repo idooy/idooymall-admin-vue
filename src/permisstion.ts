@@ -6,7 +6,7 @@
  * 
  */
 import { router } from '@/router'
-
+import { ElMessage } from 'element-plus'
 //Add nprogress.js and nprogress.css to your project.
 // https://www.npmjs.com/package/nprogress
 import nprogress from 'nprogress'
@@ -15,7 +15,7 @@ import 'nprogress/nprogress.css'
 nprogress.configure({ showSpinner: false })
 
 //如何在组件外使用store:https://pinia.vuejs.org/zh/core-concepts/outside-component-usage.html
-import { userModuleStore } from '@/store/user.ts'
+import { userStore } from '@/store/user.ts'
 
 
 /**
@@ -42,68 +42,91 @@ import { userModuleStore } from '@/store/user.ts'
  * 我们经过 RFC 讨论将其移除。然而，它仍然是被支持的，这意味着你可以向任何导航守卫传
  * 递第三个参数。在这种情况下，确保 next 在任何给定的导航守卫中都被严格调用一次。
  */
-router.beforeEach(async(to: any, from: any, next: any) => {
+router.beforeEach(async (to: any, from: any, next: any) => {
+
   // 浏览器tab页的title
   document.title = to.meta.title
   //路由跳转的同时，进度条开始工作，在路由成功跳转完成以后的后置钩子中进度条需要手动终止
   nprogress.start()
-
-  // ✅路由导航中获取store，这样做是可行的，因为路由器是在其被安装之后开始导航的，
-  // 而此时 Pinia 也已经被安装。
-  const userStore = userModuleStore()
-  const token = userStore.token
-  const username = userStore.username
-  const avatar = userStore.avatar
-
-
-  // 这些都是去登录页面的路由
-  const anonymousUrl = ['/login','/index','/' ]
-  const toLoginRoute = anonymousUrl.includes(to.path)
+  const user_tore = userStore()
+  const token = user_tore.token
+  const username = user_tore.username
+  const avatar = user_tore.avatar
   
-
-  //用户登录成功
-  if (token) {
-    if (toLoginRoute) {
-      // 还得判断从哪个路由来的，如果从登录页到登录页，那就去home
-      // 如果从非登录页去往登录页，那就哪来的的会哪
-      let fromPath = from.path;
-      if (!anonymousUrl.includes(fromPath)) {
-        next({ path: fromPath })
-      } else {
-        next({ path: '/home' })
-      }
-    } else {
-      //登录成功，访问除登录外的其他路由
-      //有用户信息放行
-      if (username.length>0 &&avatar.length>0) {
-        next()
-      } else {
-        //没有用户信息，发请求获取用户信息，再放行
-        try {
-          //获取用户信息后再放行
-          await userStore.userInfo()
-          next()
-        } catch (error) {
-          //token过期：获取不到用户信息，
-          //用户修改本地存储的token
-          //退出登录，用户数据清空
-          await userStore.userLogout()
-          next({ path: '/login'})
-          // next({ path: '/login', query: { redirect: to.path } })
-        }
-      }
-    }
-  } else { //用户未登录    
-    if (toLoginRoute) { //用户跳转的是登录页路由，就放行
-      next()
-    } else { // 用户跳转非登录页路由，就指引用户去往登录页
-      next({ path: '/login' })
-    }
+  // '/' ===》'/login'
+  if (!token && from.path == '/' && to.path == '/login') {
+    return next()
   }
+  //没有登录，强制跳转回去进行登录
+  if (!token && to.path != '/login') {
+    ElMessage({
+      message: '请先进行登录~',
+      type: 'error',
+      plain: true,
+    })
+    return next({ path: '/login' })
+  }
+  // 防止重复登录
+  if (token && to.path == '/login') {
+    ElMessage({
+      message: '请勿重复登录~',
+      type: 'error',
+      plain: true,
+    })
+    return next({ path: from.path ? from.path : "/home" })
+  }
+  next()
+  // 防止路由跳转、浏览器刷新丢失用户数据
+  if (!username || !avatar) {
+    await user_tore.userInfo()
+  }
+
+
+
+  // // 用户登录成功
+  // if (token) {
+  //   if (toLoginRoute) {
+  //     // 还得判断从哪个路由来的，如果从登录页到登录页，那就去home
+  //     // 如果从非登录页去往登录页，那就哪来的的会哪
+  //     let fromPath = from.path;
+  //     if (!anonymousUrl.includes(fromPath)) {
+  //       next({ path: fromPath })
+  //     } else {
+  //       next({ path: '/home' })
+  //     }
+  //   } else {
+  //     //登录成功，访问除登录外的其他路由
+  //     //有用户信息放行
+  //     if (username.length > 0 && avatar.length > 0) {
+  //       next()
+  //     } else {
+  //       //没有用户信息，发请求获取用户信息，再放行
+  //       try {
+  //         //获取用户信息后再放行
+  //         await user_tore.userInfo()
+  //         next()
+  //       } catch (error) {
+  //         //token过期：获取不到用户信息，
+  //         //用户修改本地存储的token
+  //         //退出登录，用户数据清空
+  //         await user_tore.userLogout()
+  //         next({ path: '/login' })
+  //         // next({ path: '/login', query: { redirect: to.path } })
+  //       }
+  //     }
+  //   }
+  // } else { //用户未登录    
+  //   if (toLoginRoute) { //用户跳转的是登录页路由，就放行
+  //     next()
+  //   } else { // 用户跳转非登录页路由，就指引用户去往登录页
+  //     next({ path: '/login' })
+  //   }
+  // }
 })
 
 //全局后置守卫
-router.afterEach((to: any, from: any, next: any) => {
+// router.afterEach((to: any, from: any, next: any) => {
+router.afterEach(() => {
   // 进度条结束
   nprogress.done()
 })

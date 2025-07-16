@@ -4,7 +4,7 @@
  * 2、一旦创建了我们的路由器实例，我们就需要将其注册为插件，这一步骤可以通过调用 use() 来完成。
  *    createApp(App).use(router).mount('#app')
  */
-import { createMemoryHistory, createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import {constantRoutes,asyncRoutes} from '@/router/routes.ts'
 
 /**

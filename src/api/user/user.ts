@@ -1,18 +1,16 @@
-import request from '@/utils/request.ts'
+import request from '@/api/request'
 import type {
     userInfoResponseData,
     userListResponseData,
     userAddModifyFormData
 } from '@/api/user/type'
-import { url } from 'inspector'
-import path from 'path'
 
 enum API {
     USER_RESOURCE_URL = '/users'
 }
 
 
-export const reqDeleteUser = (ids:Array<number>)=>{
+export const reqDeleteUser = (ids:Array<string>)=>{
     return request.delete(`${API.USER_RESOURCE_URL}`,{data:ids})
 }
 
