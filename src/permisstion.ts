@@ -53,75 +53,78 @@ router.beforeEach(async (to: any, from: any, next: any) => {
   const username = user_tore.username
   const avatar = user_tore.avatar
   
+const anonymousUrl =['/','/login']
+const toLoginRoute = anonymousUrl.includes(to.path)
+
   // '/' ===》'/login'
-  if (!token && from.path == '/' && to.path == '/login') {
-    return next()
-  }
-  //没有登录，强制跳转回去进行登录
-  if (!token && to.path != '/login') {
-    ElMessage({
-      message: '请先进行登录~',
-      type: 'error',
-      plain: true,
-    })
-    return next({ path: '/login' })
-  }
-  // 防止重复登录
-  if (token && to.path == '/login') {
-    ElMessage({
-      message: '请勿重复登录~',
-      type: 'error',
-      plain: true,
-    })
-    return next({ path: from.path ? from.path : "/home" })
-  }
-  next()
-  // 防止路由跳转、浏览器刷新丢失用户数据
-  if (!username || !avatar) {
-    await user_tore.userInfo()
-  }
-
-
-
-  // // 用户登录成功
-  // if (token) {
-  //   if (toLoginRoute) {
-  //     // 还得判断从哪个路由来的，如果从登录页到登录页，那就去home
-  //     // 如果从非登录页去往登录页，那就哪来的的会哪
-  //     let fromPath = from.path;
-  //     if (!anonymousUrl.includes(fromPath)) {
-  //       next({ path: fromPath })
-  //     } else {
-  //       next({ path: '/home' })
-  //     }
-  //   } else {
-  //     //登录成功，访问除登录外的其他路由
-  //     //有用户信息放行
-  //     if (username.length > 0 && avatar.length > 0) {
-  //       next()
-  //     } else {
-  //       //没有用户信息，发请求获取用户信息，再放行
-  //       try {
-  //         //获取用户信息后再放行
-  //         await user_tore.userInfo()
-  //         next()
-  //       } catch (error) {
-  //         //token过期：获取不到用户信息，
-  //         //用户修改本地存储的token
-  //         //退出登录，用户数据清空
-  //         await user_tore.userLogout()
-  //         next({ path: '/login' })
-  //         // next({ path: '/login', query: { redirect: to.path } })
-  //       }
-  //     }
-  //   }
-  // } else { //用户未登录    
-  //   if (toLoginRoute) { //用户跳转的是登录页路由，就放行
-  //     next()
-  //   } else { // 用户跳转非登录页路由，就指引用户去往登录页
-  //     next({ path: '/login' })
-  //   }
+  // if (!token && from.path == '/' && to.path == '/login') {
+  //   return next()
   // }
+  // //没有登录，强制跳转回去进行登录
+  // if (!token && to.path != '/login') {
+  //   ElMessage({
+  //     message: '请先进行登录~',
+  //     type: 'error',
+  //     plain: true,
+  //   })
+  //   return next({ path: '/login' })
+  // }
+  // // 防止重复登录
+  // if (token && to.path == '/login') {
+  //   ElMessage({
+  //     message: '请勿重复登录~',
+  //     type: 'error',
+  //     plain: true,
+  //   })
+  //   return next({ path: from.path ? from.path : "/home" })
+  // }
+  // next()
+  // // 防止路由跳转、浏览器刷新丢失用户数据
+  // if (!username || !avatar) {
+  //   await user_tore.userInfo()
+  // }
+
+
+
+  // 用户登录成功
+  if (token) {
+    if (toLoginRoute) {
+      // 还得判断从哪个路由来的，如果从登录页到登录页，那就去home
+      // 如果从非登录页去往登录页，那就哪来的的会哪
+      let fromPath = from.path;
+      if (!anonymousUrl.includes(fromPath)) {
+        next({ path: fromPath })
+      } else {
+        next({ path: '/home' })
+      }
+    } else {
+      //登录成功，访问除登录外的其他路由
+      //有用户信息放行
+      if (username.length > 0 && avatar.length > 0) {
+        next()
+      } else {
+        //没有用户信息，发请求获取用户信息，再放行
+        try {
+          //获取用户信息后再放行
+          await user_tore.userInfo()
+          next()
+        } catch (error) {
+          //token过期：获取不到用户信息，
+          //用户修改本地存储的token
+          //退出登录，用户数据清空
+          await user_tore.userLogout()
+          next({ path: '/login' })
+          // next({ path: '/login', query: { redirect: to.path } })
+        }
+      }
+    }
+  } else { //用户未登录    
+    if (toLoginRoute) { //用户跳转的是登录页路由，就放行
+      next()
+    } else { // 用户跳转非登录页路由，就指引用户去往登录页
+      next({ path: '/login' })
+    }
+  }
 })
 
 //全局后置守卫

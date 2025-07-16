@@ -30,21 +30,11 @@ export const constantRoutes = [
         },
     },
     {
-        path: '/404',
-        component: () => import('@/views/404/index.vue'),
-        name: '404',
-        meta: {
-            title: '404',
-            hidden: true,
-            icon: 'DocumentDelete',
-        },
-    },
-    {
         path: '/:pathMatch(.*)*',
-        redirect: '/404',
-        name: 'Any',
+        name: 'NotFound',
+        component: () => import('@/views/404/index.vue'),
         meta: {
-            title: '非法url',
+            title: '404访问',
             hidden: true,
             icon: 'DataLine',
         },
