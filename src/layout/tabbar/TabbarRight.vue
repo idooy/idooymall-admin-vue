@@ -16,6 +16,7 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
+          <el-dropdown-item @click="modifyPassword">修改密码</el-dropdown-item>
           <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -54,13 +55,16 @@ const fullScreen = () => {
   }
 }
 
+const modifyPassword = ()=>{
+  
+}
+
 //退出登录点击回调
 const logout =async () => {
   //第一件事情：需要向服务器发请求【退出登录接口】
   //第二件事情：仓库当中关于用户相关数据清空[token,username,avatar]
   //第三件事情：跳转到登录页面
   await user_tore.userLogout()
-  // alert(123)
   //跳转到登录页面
   $router.push({ path: '/login'})
 }

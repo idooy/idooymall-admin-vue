@@ -1,24 +1,14 @@
 <template>
   <div class="layout_container">
     <!-- 左侧菜单 -->
-    <!-- <div class="layout_slider" :class="{ fold: layoutStore.fold ? true : false }"> -->
     <div class="layout_slider">
       <Display></Display>
       <!-- 菜单栏添加滚动条 -->
-      <div class="layout_slider_menu">
-        <el-scrollbar :noresize="true" class="scrollbar">
+      <div class="layout_slider_menu" >
+        <!-- <el-scrollbar :noresize="true" class="scrollbar"> -->
           <!-- 菜单组件 -->
-          <el-menu 
-            background-color="#f7f8fc"
-            text-color="#6c6e72"
-            popper-effect="light" 
-            :default-active="$route.path" 
-            :collapse="layoutStore.fold"
-            :router="true">
-            <!-- 根据路由动态生成菜单,给组件传值过去-->
-            <Menu :menuList="user_store.menuRoutes"></Menu>
-          </el-menu>
-        </el-scrollbar>
+            <Menu></Menu>
+        <!-- </el-scrollbar> -->
       </div>
 
     </div>
@@ -29,7 +19,7 @@
       <Tabbar></Tabbar>
     </div>
     <!-- 内容展示区域 -->
-    <div class="layout_main" :class="{ fold: layoutStore.fold ? true : false }">
+    <div class="layout_main" :class="{ fold:layoutStore.fold }">
       <!-- 点击菜单展示 -->
       <Main></Main>
     </div>
@@ -38,27 +28,20 @@
 </template>
 
 <script setup lang="ts">
-//获取路由对象
-import { useRoute } from 'vue-router'
 
 //引入左侧菜单顶部子组件
-import Display from '@/layout/slider/display.vue'
+import Display from '@/layout/slider/Display.vue'
 //引入菜单组件
-import Menu from '@/layout/slider/menu.vue'
+import Menu from '@/layout/slider/Menu.vue'
 //右侧内容的展示区域
-import Main from '@/layout/main.vue'
+import Main from '@/layout/main/Main.vue'
 //引入顶部tabbar组件
 import Tabbar from '@/layout/tabbar/index.vue'
 //获取layout配置仓库
-import { layoutSttingStore } from '@/store/layout_setting.ts'
-import { userStore } from '@/store/user'
+import { useLayoutStore } from '@/store/layout_setting.ts'
 
-const user_store = userStore()
+let layoutStore = useLayoutStore()
 
-let layoutStore = layoutSttingStore()
-
-//获取路由对象
-let $route = useRoute()
 
 </script>
 
@@ -79,11 +62,11 @@ export default {
     .layout_slider_menu {
       display: flex;
       top: $menu-top-box-height;
-      font-weight: 200;
       left: 0;
-      width: $menu-width;
+      bottom: 0;
+      width: $menu-max-width;
       height: calc(100vh - $menu-top-box-height);
-      background-color: $menu-background-color;
+      // background-color: $menu-background-color;
       // background-color: pink;
     }
 
@@ -105,10 +88,10 @@ export default {
 
   .layout_tabbar {
     position: fixed;
-    width: calc(100% - $menu-width); //减去左侧菜单宽度
+    width: calc(100% - $menu-max-width); //减去左侧菜单宽度
     height: $tabbar-height; //导航高度
     top: 0px;
-    left: $menu-width; //左侧菜单宽度
+    left: $menu-max-width; //左侧菜单宽度
     transition: all 0.3s;
 
     // &.fold {
@@ -119,17 +102,15 @@ export default {
 
   .layout_main {
     position: absolute;
-    width: calc(100% - $menu-width);
+    width: calc(100% - $menu-max-width);
     height: calc(100vh - $tabbar-height);
-    // background-color: yellowgreen;
-    left: $menu-width; //左侧菜单宽度
+    left: $menu-max-width; //左侧菜单宽度
     top: $tabbar-height;
     padding: 20px;
     overflow: auto; //滚动条
     transition: all 0.3s;
 
     &.fold {
-      background-color: green;
       width: calc(100% - $menu-min-width);
       left: calc($menu-min-width + 6px);
     }

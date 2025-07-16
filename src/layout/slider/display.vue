@@ -20,7 +20,7 @@ export default {
 <style scoped lang="scss">
 .display-box {
     display: flex;
-    width: $menu-width;
+    width: $menu-max-width;
     height: $menu-top-box-height;
     color: white;
     align-items: center;

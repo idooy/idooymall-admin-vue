@@ -71,7 +71,7 @@ const submitLoginForm = (formEl: FormInstance | undefined) => {
       const cryptPwd:string = await encryption(loginForm.password)
       reqLogin({"username": loginForm.username, "password": cryptPwd}).then(token=>{
         user_store.registryToken(token)
-        router.push({ path: '/layout' })
+        router.push({ path: '/' })
       })
     }
   })

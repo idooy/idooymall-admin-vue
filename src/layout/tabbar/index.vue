@@ -11,9 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import Braadcrumb from './breadcrumb.vue'
-import TabbarRight from './tabbar_right.vue'
-import FoldExpand from './fold_expand.vue';
+import Braadcrumb from './Breadcrumb.vue'
+import TabbarRight from './TabbarRight.vue'
+import FoldExpand from './FoldExpand.vue';
 </script>
 
 <script lang="ts">

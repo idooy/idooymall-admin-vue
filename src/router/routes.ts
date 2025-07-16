@@ -4,20 +4,7 @@
  * 这里的 routes 选项定义了一组路由，把 URL 路径映射到组件
  */
 export const constantRoutes = [
-    // http://localhost:5173/
-    // http://localhost:5173/index
-    // http://localhost:5173/login
-    // 以上三个地址均为登录页面URL
-    {
-        path: '/',
-        name: 'root',
-        redirect: '/login'
-    },
-    // {
-    //     path: '/index',
-    //     name: 'Index',
-    //     redirect: '/login'
-    // },
+
     {
         path: '/login',
         name: 'Login',
@@ -46,10 +33,15 @@ export const asyncRoutes = [
 
     // 首页
     {
-        path: '/layout',
+        path: '/',
         name: 'Layout',
         component: () => import('@/layout/index.vue'),
         redirect: '/home',
+        meta: {
+            title: '',
+            hidden: false,
+            icon: '',
+        },
         children: [
             {
                 path: '/home',
@@ -173,4 +165,5 @@ export const asyncRoutes = [
         ],
     },
 
+    
 ]
