@@ -52,6 +52,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+   
 .layout_container {
   width: 100%;
   height: 100vh;
@@ -69,20 +71,6 @@ export default {
       // background-color: $menu-background-color;
       // background-color: pink;
     }
-
-    // &.fold {
-    //   width: calc($menu-min-width - 10px);
-    // }
-
-    .scrollbar {
-      width: 100%;
-      // 高度需要限制，它的高度=(左侧菜单栏的高度)-(顶部logo的高度)
-      height: calc(100vh - $menu-top-box-height);
-      .el-menu{
-         border-right: none;
-      }
-    }
-
 
   }
 
@@ -109,6 +97,7 @@ export default {
     padding: 20px;
     overflow: auto; //滚动条
     transition: all 0.3s;
+
 
     &.fold {
       width: calc(100% - $menu-min-width);

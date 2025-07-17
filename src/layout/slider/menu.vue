@@ -5,11 +5,12 @@
         @select="selectHandle" 
         :collapse="layoutStore.fold"
         :collapse-transition="false"
-        :unique-opened="true"
+
+        :default-active="defauleActive"
         >
             <template v-for="(item) in menus" :key="item.path">
 
-                <!-- 没有子路由 筛选‘数据大屏’这样的路由-->
+                <!-- 没有子路由 筛选‘数据大屏’这样的路由         :unique-opened="true"-->
                 <template v-if="!item.children || item.children.length == 0">
                     <el-menu-item :index="item.path" v-if="!item.meta.hidden">
                         <el-icon>
@@ -61,7 +62,12 @@
 import { useRouter } from 'vue-router'
 import { userStore } from '@/store/user';
 import { useLayoutStore } from '@/store/layout_setting';
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+// 默认选中当前路由
+const route = useRoute()
 
+const defauleActive = ref(route.path)
 const layoutStore = useLayoutStore()
 const user_store = userStore()
 const menus = user_store.menuRoutes
@@ -93,8 +99,12 @@ export default {
     left: 0;
     overflow: auto;
     transition: all 0.2s;
-    box-shadow: 0px 3px 5px -1px #dedbdb;
+    box-shadow: 0px 3px 5px -1px #dedbdb; 
+    -ms-overflow-style: none;  /* 对于IE和Edge */
+    scrollbar-width: none; /* 隐藏Firefox滚动条 */
+    overflow-y: scroll;        /* 启用垂直滚动 */
 }
+
 .width-class{
     width: $menu-min-width;
 }

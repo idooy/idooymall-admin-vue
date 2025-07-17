@@ -17,7 +17,7 @@ export const userStore = defineStore(CONSTANT.USER_STORE_NAME, {
         return {
             // 所有这些属性都将自动推断出它们的类型
             // 初始化是登录成功后直接给的，之后的每次都从本地存储中获取
-            token: localStorage.getItem(CONSTANT.LOCAL_STORE_TOKEN_KEY)||'',
+            token: localStorage.getItem(CONSTANT.LOCAL_STORE_TOKEN_KEY) || '',
             username: '',
             userId: 0,
             menuRoutes: asyncRoutes,
@@ -31,19 +31,20 @@ export const userStore = defineStore(CONSTANT.USER_STORE_NAME, {
             localStorage.setItem(CONSTANT.LOCAL_STORE_TOKEN_KEY, token)
         },
         async userInfo() {
-            //获取用户信息存储仓库中：用户头像，名字
-            const result: userInfoResponseData = await reqUserInfo(0)
-            //如果获取用户信息成功，就存储信息
-            this.username = result.username
-            this.avatar = result.avatar
+            //获取用户信息存储仓库中：用户头像，名字,0表示获取当前登录用户信息
+            // const result: userInfoResponseData = await reqUserInfo(0)
+            await reqUserInfo(0).then(result => {
+                this.username = result.username
+                this.avatar = result.avatar
+            })
         },
         // 登出 所要处理的逻辑，方法必须同步执行
         async userLogout() {
             await reqLogout()
             // 先删除本地存储
             localStorage.removeItem(CONSTANT.LOCAL_STORE_TOKEN_KEY),
-            //再删除token
-            this.token = ''
+                //再删除token
+                this.token = ''
         }
 
     }
