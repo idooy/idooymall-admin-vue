@@ -1,46 +1,57 @@
 <template>
   <div class="layout_container">
-    <!-- 左侧菜单 -->
-    <div class="layout_slider">
-      <Display></Display>
-      <!-- 菜单栏添加滚动条 -->
-      <div class="layout_slider_menu" >
-        <!-- <el-scrollbar :noresize="true" class="scrollbar"> -->
-          <!-- 菜单组件 -->
-            <Menu></Menu>
-        <!-- </el-scrollbar> -->
-      </div>
+    <el-container>
+      <!-- 需要和$header-height的值保持一样 -->
+      <el-header height="42" style="--el-header-padding: 0px;">
+        <d-tabbar></d-tabbar>
+      </el-header>
+      <!-- 高度需要减去header的高度 -->
+      <el-container>
+        <!-- ========================el-aside==================== -->
+        <el-aside class="layout_slider" :class="{ 'width-class': layoutStore.fold }">
+          <!-- <div > -->
+          <el-menu class="menu-box" popper-effect="light" @select="selectHandle" :collapse="layoutStore.fold"
+            :collapse-transition="false">
+            <d-slider-menu :menuList="menuList"></d-slider-menu>
+          </el-menu>
+          <!-- </div> -->
 
-    </div>
-    <!-- 顶部导航 "-->
-    <!-- <div class="layout_tabbar" :class="{ fold: layoutStore.fold ? true : false }"> -->
-    <div class="layout_tabbar">
-      <!-- layout组件顶部组件tabbar -->
-      <Tabbar></Tabbar>
-    </div>
-    <!-- 内容展示区域 -->
-    <div class="layout_main" :class="{ fold:layoutStore.fold }">
-      <!-- 点击菜单展示 -->
-      <Main></Main>
-    </div>
-
+        </el-aside>
+        <!-- ========================el-aside==================== -->
+        <el-main>
+          <div class="layout_main" :class="{ fold: layoutStore.fold }">
+            <d-main></d-main>
+          </div>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script setup lang="ts">
 
-//引入左侧菜单顶部子组件
-import Display from '@/layout/slider/Display.vue'
+
 //引入菜单组件
-import Menu from '@/layout/slider/Menu.vue'
+import DSliderMenu from '@/layout/DSliderMenu.vue'
 //右侧内容的展示区域
-import Main from '@/layout/main/Main.vue'
+import DMain from '@/layout/DMain.vue'
 //引入顶部tabbar组件
-import Tabbar from '@/layout/tabbar/index.vue'
+import DTabbar from '@/layout/DHeader.vue'
 //获取layout配置仓库
 import { useLayoutStore } from '@/store/layout_setting.ts'
+import { userStore } from '@/store/user'
+import { useRouter } from 'vue-router'
 
-let layoutStore = useLayoutStore()
+const router = useRouter()
+const layoutStore = useLayoutStore()
+const menuList = userStore().menuRoutes
+
+//点击菜单的回调，需要菜单绑定index属性
+const selectHandle = (path: string) => {
+  router.push(path)
+}
+
+
 
 
 </script>
@@ -52,57 +63,36 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-   
 .layout_container {
-  width: 100%;
-  height: 100vh;
-  // background-color: red;
 
-  // background-color: red;
   .layout_slider {
-    .layout_slider_menu {
-      display: flex;
-      top: $menu-top-box-height;
-      left: 0;
-      bottom: 0;
       width: $menu-max-width;
-      height: calc(100vh - $menu-top-box-height);
-      // background-color: $menu-background-color;
-      // background-color: pink;
-    }
+      box-shadow: 0px 3px 5px -1px #dedbdb;
 
+      &.width-class {
+        width: $menu-min-width;
+      }
+
+      .menu-box {
+        height: calc(100vh - $header-height);
+        border: none;
+        bottom: 0;
+        left: 0;
+        overflow: auto;
+        transition: all 0.2s;
+        -ms-overflow-style: none;
+        /* 对于IE和Edge */
+        scrollbar-width: none;
+        /* 隐藏Firefox滚动条 */
+        overflow-y: scroll;
+        /* 启用垂直滚动 */
+        background-color: $menu-background-color;
+      }
   }
 
-  .layout_tabbar {
-    position: fixed;
-    width: calc(100% - $menu-max-width); //减去左侧菜单宽度
-    height: $tabbar-height; //导航高度
-    top: 0px;
-    left: $menu-max-width; //左侧菜单宽度
-    transition: all 0.3s;
-
-    // &.fold {
-    //   width: calc(100% - $menu-min-width);
-    //   left: $menu-min-width;
-    // }
-  }
-
-  .layout_main {
-    position: absolute;
-    width: calc(100% - $menu-max-width);
-    height: calc(100vh - $tabbar-height);
-    left: $menu-max-width; //左侧菜单宽度
-    top: $tabbar-height;
-    padding: 20px;
-    overflow: auto; //滚动条
-    transition: all 0.3s;
-
-
-    &.fold {
-      width: calc(100% - $menu-min-width);
-      left: calc($menu-min-width + 6px);
-    }
+  .layout_main{
+    // 滚轮向下会带动header并隐藏了header
+    height: calc(100vh - $header-height - 80px);
   }
 }
 </style>

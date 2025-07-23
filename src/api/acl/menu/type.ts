@@ -5,7 +5,10 @@ export interface MenuListData{
     parentId:number
     name:string
     url:string
-    type:number
+    type:{
+        key:number
+        text:string
+    }
     icon:string
     children: MenuListData[]
 }

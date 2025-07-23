@@ -23,7 +23,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 /**elementplus icons全局注册===== bottom*/
 
-
 //引入模板的全局样式
 import '@/assets/styles/index.scss'
 // svg插件

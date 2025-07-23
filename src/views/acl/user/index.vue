@@ -106,11 +106,11 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted} from "vue"
-import type { userList } from '@/api/user/type.ts'
-import { reqUserList,reqAddUser,reqModifyUser,reqDeleteUser } from "@/api/user/user.ts";
+import type { userList } from '@/api/acl/user/type'
+import { reqUserList,reqAddUser,reqModifyUser,reqDeleteUser } from "@/api/acl/user";
 import type { FormInstance, FormRules} from 'element-plus'
 import { ElMessage } from 'element-plus'
-import { userData } from "@/api/user/type.ts";
+import { userData } from "@/api/acl/user/type";
 
 
 const mulSelection = ref<userData[]>([]) // 选中的用户行
@@ -247,7 +247,7 @@ const batchDeleteHandle = ()=>{
 <style scoped lang="scss">
 .codition-card {
   height: 80px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   .el-form {
     display: flex;
     justify-content: space-between;

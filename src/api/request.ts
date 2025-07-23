@@ -16,18 +16,22 @@ request.interceptors.request.use((config) => {
 })
 //3 响应拦截器
 request.interceptors.response.use((response) => {
-  if (response.status === 200 && response.data.code === 2000) {
+  // 2xx 范围内的状态码都会触发该函数。
+  if (response.data.code === 2000) {
     // 成功：响应状态码和业务状态码双重验证
     return Promise.resolve(response.data.data)
   } else {
     let msg = response.data.message
-    ElMessage({
-      type: 'error',
-      message: msg
-    })
+    if (msg) {
+      ElMessage({
+        type: 'error',
+        message: msg
+      })
+    }
     return Promise.reject(response)
   }
 }, (error) => {
+  // 超出 2xx 范围的状态码都会触发该函数。
   // 对响应错误做点什么
   if (error && error.response) {
     const { status } = error.response

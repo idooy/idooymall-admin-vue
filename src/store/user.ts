@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { asyncRoutes } from '@/router/routes.ts'
-import type { userInfoResponseData } from '@/api/user/type'
-import { reqUserInfo } from '@/api/user/user.ts'
-import { reqLogout } from '@/api/user/login';
+import type { userInfoResponseData } from '@/api/acl/user/type'
+import { reqUserInfo } from '@/api/acl/user'
+import { reqLogout } from '@/api/acl/user/login';
 
 const CONSTANT = {
     LOCAL_STORE_TOKEN_KEY: 'user_token',

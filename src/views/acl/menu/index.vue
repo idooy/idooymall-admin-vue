@@ -1,25 +1,39 @@
 <template>
-  <el-button style="margin-bottom: 15px;" type="primary" @click="dirDialogVisible = true">添加目录</el-button>
-  <el-table style="width: 100%" :data="menuList" row-key="menuId" :border="true">
-    <el-table-column align='center' prop="name" label="名称" />
-    <el-table-column align='center' prop="type" label="类型">
-      <template #default="scope">
-        <el-tag v-if="scope.row.type == 0" type='primary' disable-transitions>目录</el-tag>
-        <el-tag v-else-if="scope.row.type == 1" type='success' disable-transitions>菜单</el-tag>
-        <el-tag v-else type='warning' disable-transitions>按钮</el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column align='center' prop="url" label="路径" />
-    <el-table-column align='center' label="操作">
-      <template #default="scope">
-        <el-button v-if="scope.row.type == 0" size="small" type="primary" @click="addMenuHandle()">添加菜单</el-button>
-        <el-button v-if="scope.row.type == 1" size="small" type="success" @click="addButtHandle()">添加按钮</el-button>
-        <el-button color="#626aef" size="small" @click="edit(scope.row)">编辑</el-button>
-        <el-button size="small" type="danger">删除</el-button>
-      </template>
+  <el-card>
+    <el-button style="margin-bottom: 15px;" type="primary" @click="dirDialogVisible = true">添加目录</el-button>
+    <span style="color: red;">删除菜单权限只能逐级单个删除，目录或菜单的子菜单数量为零才能删除</span>
+    <el-table style="width: 100%" :data="menuList" row-key="menuId" :border="true" :expand-row-keys="expandRowKeys">
 
-    </el-table-column>
-  </el-table>
+      <el-table-column align='center' prop="name" label="名称">
+        <template #default="scope">
+          <el-icon style="vertical-align: middle;" v-if="scope.row.icon">
+            <component :is="scope.row.icon" />
+          </el-icon>
+          <span style="vertical-align: middle;margin-left: 10px;">{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align='center' prop="type" label="类型" width="80">
+        <template #default="scope">
+          <el-tag v-if="scope.row.type.key == 0" type='primary'>{{scope.row.type.text}}</el-tag>
+          <el-tag v-if="scope.row.type.key == 1" type='success'>{{scope.row.type.text}}</el-tag>
+          <el-tag v-if="scope.row.type.key == 2" type='warning'>{{scope.row.type.text}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align='center' prop="url" label="路径" />
+      <el-table-column align='left' label="操作">
+        <template #default="scope">
+          <el-button v-if="scope.row.type.key == 0" size="small" type="primary" @click="addMenuHandle()">添加菜单</el-button>
+          <el-button v-if="scope.row.type.key == 1" size="small" type="success" @click="addButtHandle()">添加按钮</el-button>
+          <el-button color="#626aef" size="small" @click="edit(scope.row)">编辑</el-button>
+          <el-popconfirm title="确认删除?" @confirm="doDelMenuHandler(scope.row)">
+            <template #reference>
+              <el-button size="small" v-if="scope.row.children && scope.row.children.length == 0" type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-card>
 
   <!-- 添加目录对话框 -->
   <el-dialog v-model="dirDialogVisible" title="添加目录" width="500" draggable @close="destoryAddDirDialog(ruleDirFormRef)">
@@ -37,7 +51,8 @@
   </el-dialog>
 
   <!-- 添加菜单、按钮对话框 -->
-  <el-dialog v-model="menuDialogVisible" :title="`添加${titleText}`" width="500" draggable @close="cancel(ruleMenuFormRef)">
+  <el-dialog v-model="menuDialogVisible" :title="`添加${titleText}`" width="500" draggable
+    @close="cancel(ruleMenuFormRef)">
     <el-form ref="ruleMenuFormRef" :model="ruleMenuForm" :rules="menuFormRules">
       <el-form-item :label="`${titleText}名称`" prop="name">
         <el-input v-model="ruleMenuForm.name" />
@@ -53,19 +68,37 @@
       </div>
     </template>
   </el-dialog>
+
+  <!-- 删除对话框，起初打算是支持批量删除的，现在业务只允许逐级一个个删除-->
+  <!-- <el-dialog v-model="delConfirmDialogVisible" title="删除菜单权限">
+    <div style="margin-bottom: 15px;text-align: center;">
+      <el-text class="mx-1" type="danger" size="large">当前操作有风险；请谨慎操作！</el-text>
+    </div>
+    <el-tree  :data="confirmDelMenuList" :default-expand-all="true"
+      :props="{ label: 'name', children: 'children' }" />
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type='primary' @click="delConfirmDialogVisible = false">取消删除</el-button>
+        <el-button type="danger" @click="doDelMenuHandler()"> 确认删除 </el-button>
+      </div>
+    </template>
+  </el-dialog> -->
+
 </template>
 
 <script setup lang="ts">
-import { reqAllMenuButtonTree } from '@/api/menu/menu';
-import type { MenuListData, MenuForm } from '@/api/menu/type';
-import { reactive, ref, onMounted } from 'vue';
+import { reqAllMenuButtonTree, reqDelMenusById } from '@/api/acl/menu';
+import type { MenuListData, MenuForm } from '@/api/acl/menu/type';
+import { reactive, ref, onMounted,computed } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
+
 
 
 onMounted(() => {
   initTableData()
 })
 
+const expandRowKeys = ref<number[]>([])
 const menuDialogVisible = ref(false)
 const ruleDirFormRef = ref<FormInstance>()
 const ruleMenuFormRef = ref<FormInstance>()
@@ -98,23 +131,44 @@ const ruleMenuForm = reactive({
   type: ''
 })
 
-const menuList = ref<MenuListData[]>([
-  {
-    menuId: 0,
-    parentId: 0,
-    name: '',
-    url: '',
-    type: 0,
-    icon: '',
-    children: []
-  }
-])
+const menuList = ref<MenuListData[]>([])
+
+// const confirmDelMenuList = ref<MenuListData[]>([])
+// const delConfirmDialogVisible = ref(false)
+// 点击列表‘删除’，打开删除对话框
+// const confirmDelDialog = (row: MenuListData) => {
+  // 首先将Tree组件的历史数据清空，这样展示的才是本次要删除的准确数据
+  // confirmDelMenuList.value.pop()
+  // 将本次要删除的数据以tree组件的形式进行展示确认
+  // confirmDelMenuList.value.push(row)
+  // delConfirmDialogVisible.value = true
+// }
+// 确认删除，真正进行删除的地方
+const doDelMenuHandler = async (row:MenuListData) => {
+  // 把要删除的菜单id收集起来
+  // const delMenuIdArr= collectDelMenuIds(confirmDelMenuList.value,new Array())
+  await reqDelMenusById(row.menuId)
+  // 记录当前删除行的parentid，方便删除成功以后直接展示
+  expandRowKeys.value.push(row.parentId)
+  initTableData()
+}
+
+// 递归拿到要删除菜单的id
+// const collectDelMenuIds = (menus: MenuListData[], collect: Array<number>) => {
+//   menus.forEach(element => {
+//     if (element.children && element.children.length > 0) {
+//       collectDelMenuIds(element.children, collect)
+//     }
+//     collect.push(element.menuId)
+//   });
+//   return collect
+// }
+
 
 // ‘编辑’按钮
-const edit = (row:MenuListData)=>{
+const edit = (row: MenuListData) => {
   menuDialogVisible.value = true
-  Object.assign(row,ruleMenuForm)
-  console.log(row)
+  Object.assign(row, ruleMenuForm)
 }
 
 // ‘添加目录’对话框‘确认’按钮
@@ -123,8 +177,6 @@ const doAddDirHandler = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       console.log('submit!')
-
-
     }
     dirDialogVisible.value = false
     ruleDirForm.name = ''
@@ -137,12 +189,9 @@ const doAddMenuButtHandler = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       console.log('submit!')
-
       menuFormDestory()
       formEl.resetFields()
-
     }
-
   })
 }
 
@@ -179,11 +228,9 @@ const addButtHandle = () => {
 // 系统所有的目录、菜单、按钮
 const initTableData = async () => {
   await reqAllMenuButtonTree().then(list => {
-    console.log(list)
     menuList.value = list
   })
 }
-
 
 </script>
 

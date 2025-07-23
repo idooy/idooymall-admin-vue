@@ -31,7 +31,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
       next()
     } else { // 访问的不是匿名路由,得强制跳转到‘/login'
       ElMessage({
-        message: '请先进行登录~',
+        message: '请进行登录~',
         type: 'error',
         plain: true,
       })

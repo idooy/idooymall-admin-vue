@@ -1,8 +1,8 @@
 <template>
   <div class="tabbar-right-button">
-    <el-button type="primary" icon="Refresh" circle />
-    <el-button type="primary" icon="FullScreen" circle @click="fullScreen" />
-    <el-button type="primary" icon="Setting" circle />
+    <el-button color="#409eff" icon="Refresh" circle />
+    <el-button color="#409eff" icon="FullScreen" circle @click="fullScreen" />
+    <el-button color="#409eff" icon="Setting" circle />
   </div>
   <div class="tabbar-right-user">
     <el-avatar :size="32" :src="user_tore.avatar" />
@@ -72,13 +72,13 @@ const logout =async () => {
 
 <script lang="ts">
 export default {
-  name: 'TabbarRight',
+  name: 'DTabbarRight',
 }
 </script>
 
 <style scoped lang="scss">
 .tabbar-right-button {
-  margin-right: 25px;
+  margin-right: 30px;
 }
 
 .tabbar-right-user {
@@ -86,6 +86,7 @@ export default {
   color: var(--el-color-primary);
   display: flex;
   align-items: center;
+  margin-right: 10px;
 
   .el-dropdown {
     margin-left: 10px;

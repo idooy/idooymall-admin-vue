@@ -1,7 +1,7 @@
 import request from '@/api/request'
 import type {
     loginFormData
-} from '@/api/user/type'
+} from '@/api/acl/user/type'
 
 enum API {
     LOGIN_API = '/login',

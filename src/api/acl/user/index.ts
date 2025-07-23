@@ -3,7 +3,7 @@ import type {
     userInfoResponseData,
     userListResponseData,
     userAddModifyFormData
-} from '@/api/user/type'
+} from '@/api/acl/user/type'
 
 enum API {
     USER_RESOURCE_URL = '/users'
