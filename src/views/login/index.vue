@@ -37,7 +37,7 @@ let router = useRouter()
 let user_store = userStore()
 const loginRuleFormRef = ref<FormInstance>()
 //表单数据
-let loginForm = reactive({ username: 'idooy', password: '123456' })
+let loginForm = reactive({ username: 'idooy_admin', password: 'idooy_admin@123456' })
 
 const validator = reactive<FormRules<typeof loginForm>>({
   username: [{

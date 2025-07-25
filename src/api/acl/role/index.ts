@@ -1,5 +1,5 @@
 import request from '@/api/request'
-import { RoleQueryPage,RoleTablePage,RoleCMForm } from '@/api/acl/role/type'
+import { RoleQueryPage,RoleTablePage,RoleCMForm,RoleTableData } from '@/api/acl/role/type'
 
 enum API{
     ROLES_URL='/roles'
@@ -11,7 +11,7 @@ enum API{
  * @returns 
  */
 export const reqRefreshRoleOfPermission = (roleId:number,menuIds:number[]) =>{
-    return request.post<any,number[]>(`${API.ROLES_URL}/${roleId}/permission`,menuIds)
+    return request.post(`${API.ROLES_URL}/${roleId}/permission`,menuIds)
 }
 
 
@@ -30,7 +30,7 @@ export const reqRoleOfPermissionId = (roleId:string) =>{
  * @returns 
  */
 export const reqModifyRole =(param:RoleCMForm)=>{
-    return request.put<any,RoleTablePage>(`${API.ROLES_URL}`,param)
+    return request.put(`${API.ROLES_URL}`,param)
 }
 
 /**
@@ -39,7 +39,7 @@ export const reqModifyRole =(param:RoleCMForm)=>{
  * @returns 
  */
 export const reqSaveRole =(param:RoleCMForm)=>{
-    return request.post<any,RoleTablePage>(`${API.ROLES_URL}`,param)
+    return request.post(`${API.ROLES_URL}`,param)
 }
 
 /**
@@ -58,4 +58,14 @@ export const reqTableData =(param:RoleQueryPage)=>{
  */
 export const reqDelRole=(id:string)=>{
     return request.delete(`${API.ROLES_URL}/${id}`)
+}
+
+
+/**
+ *  查询所有的角色
+ * @param id 
+ * @returns 
+ */
+export const reqAllRole=()=>{
+    return request.get<any,RoleTableData[]>(`${API.ROLES_URL}`)
 }

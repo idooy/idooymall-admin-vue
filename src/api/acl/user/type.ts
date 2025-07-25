@@ -7,28 +7,34 @@ export interface userListRequestData {
 
 
 // 系统用户列表查询响应的数据结构
-export interface userListResponseData {
+export interface UserTablePageData {
   totalCount: number,
   pageSize: number,
   totalPage: number,
-  currPage: number,
-  list: userList
+  currentPage: number,
+  list: UserTableData[]
+}
+interface User{
+  userId: string,
+  userAccount: string,
+  email: string,
+  mobile: string,
+  avatar: string,
 }
 
+export interface UserCMForm extends User{
+  userStatus: number
+}
 /**
  * 列表展示的每个用户数据
  */
-export interface userData {
-  userId: string,
-  username: string,
-  email: string,
-  mobile: string,
-  status: number,
-  avatar: string,
-  createUserId: string,
-  createTime: string
+export interface UserTableData extends User{
+  userStatus: {key:number,text:string},
+  creator: string,
+  createTime: string,
+  updateTime:string
 }
-export type userList = userData[]
+
 
 //用户登录携带参数ts类型
 export interface loginFormData {

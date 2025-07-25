@@ -1,15 +1,42 @@
 import request from '@/api/request'
 import type {
     userInfoResponseData,
-    userListResponseData,
-    userAddModifyFormData
+    UserTablePageData,
+    UserCMForm
 } from '@/api/acl/user/type'
+
+import {RoleTableData} from '@/api/acl/role/type'
 
 enum API {
     USER_RESOURCE_URL = '/users'
 }
 
 
+
+/**
+ * 提交用户分配到的角色
+ * @param roleId 角色id
+ * @returns 
+ */
+export const reqSubmitUserOfRoles = (userId:string,roleIds:number[]) =>{
+    return request.put(`${API.USER_RESOURCE_URL}/${userId}/roles`,roleIds)
+}
+
+/**
+ * 获取用户所拥有角色
+ * @param roleId 角色id
+ * @returns 
+ */
+export const reqUserOfRole = (userId:string) =>{
+    return request.get<any,number[]>(`${API.USER_RESOURCE_URL}/${userId}/roles`)
+}
+
+
+/**
+ * 批量删除
+ * @param ids 
+ * @returns 
+ */
 export const reqDeleteUser = (ids:Array<string>)=>{
     return request.delete(`${API.USER_RESOURCE_URL}`,{data:ids})
 }
@@ -19,7 +46,7 @@ export const reqDeleteUser = (ids:Array<string>)=>{
  * @param userData 
  * @returns 
  */
-export const reqModifyUser = (userData:userAddModifyFormData)=>{
+export const reqModifyUser = (userData:UserCMForm)=>{
     return request.put(`${API.USER_RESOURCE_URL}`,userData)
 }
 
@@ -29,7 +56,7 @@ export const reqModifyUser = (userData:userAddModifyFormData)=>{
  * @param userData 
  * @returns 
  */
-export const reqAddUser = (userData:userAddModifyFormData)=>{
+export const reqAddUser = (userData:UserCMForm)=>{
     return request.post(`${API.USER_RESOURCE_URL}`,userData)
 }
 
@@ -46,7 +73,7 @@ export const reqUserInfo = (uid:number) => {
  * @returns 
  */
 export const reqUserList =(pageNum:number,pageSize:number,username:string)=>{
-    return request.get<any,userListResponseData>(
+    return request.get<any,UserTablePageData>(
         `${API.USER_RESOURCE_URL}/${pageNum}/${pageSize}`,
         {
             params:{
