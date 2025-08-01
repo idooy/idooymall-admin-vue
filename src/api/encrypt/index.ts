@@ -1,7 +1,7 @@
 import request from '@/api/request'
 
 enum API {
-    PUBLIC_KEY_URL = '/rsa/pubkey'
+    PUBLIC_KEY_URL = '/admin/rsa/pubkey'
 }
 
 /**

@@ -5,11 +5,11 @@
     <el-button color="#409eff" icon="Setting" circle />
   </div>
   <div class="tabbar-right-user">
-    <el-avatar :size="32" :src="user_tore.avatar" />
+    <el-avatar :size="32" :src="userStore.avatar" />
     <!-- 下拉菜单 -->
     <el-dropdown>
       <span class="el-dropdown-link">
-        {{user_tore.username}}
+        {{userStore.username}}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
@@ -27,8 +27,8 @@
 <script setup lang="ts">
 import { useRouter} from 'vue-router'
 //用户小仓库
-import { userStore } from '@/store/user.ts'
-let user_tore = userStore()
+import { userModuleStore } from '@/store/user.ts'
+let userStore = userModuleStore()
 //获取路由器对象
 let $router = useRouter()
 
@@ -64,7 +64,7 @@ const logout =async () => {
   //第一件事情：需要向服务器发请求【退出登录接口】
   //第二件事情：仓库当中关于用户相关数据清空[token,username,avatar]
   //第三件事情：跳转到登录页面
-  await user_tore.userLogout()
+  await userStore.userLogout()
   //跳转到登录页面
   $router.push({ path: '/login'})
 }

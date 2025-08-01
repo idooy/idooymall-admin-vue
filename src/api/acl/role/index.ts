@@ -2,7 +2,7 @@ import request from '@/api/request'
 import { RoleQueryPage,RoleTablePage,RoleCMForm,RoleTableData } from '@/api/acl/role/type'
 
 enum API{
-    ROLES_URL='/roles'
+    ROLES_URL='/admin/roles'
 }
 
 /**

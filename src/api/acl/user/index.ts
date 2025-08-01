@@ -8,7 +8,7 @@ import type {
 import {RoleTableData} from '@/api/acl/role/type'
 
 enum API {
-    USER_RESOURCE_URL = '/users'
+    USER_RESOURCE_URL = '/admin/users'
 }
 
 

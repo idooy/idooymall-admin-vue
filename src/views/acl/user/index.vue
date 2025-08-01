@@ -26,7 +26,7 @@
       <el-table-column type="selection" header-align="center" align='center' width="50" />
       <el-table-column type="index" label="#" header-align="center" align='center' width="40" />
       <!-- <el-table-column prop="id" header-align="center" align="center" label="id" hidden></el-table-column> -->
-      <el-table-column prop="userAccount" header-align="center" align="center" label="账号" />
+      <el-table-column prop="userAccount" header-align="center" align="left" label="账号" width="140"/>
       <el-table-column prop="mobile" header-align="center" align="center" label="手机号码" width="120" />
       <el-table-column prop="email" header-align="center" align="center" label="邮箱" width="180" />
       <el-table-column prop="status" header-align="center" align="center" label="用户状态">
@@ -162,7 +162,7 @@ let modifyForm = reactive<UserCMForm>({
 const rules = reactive<FormRules<UserCMForm>>({
   userAccount: [
     { required: true, message: '请填写用户名', trigger: 'blur' },
-    { pattern: /^[a-zA-Z0-9_]{2,12}$/, message: '用户名只能包含字母、数字和下划线,长度2~12', trigger: 'blur' },
+    { pattern: /^[a-zA-Z0-9_]{2,20}$/, message: '用户名只能包含字母、数字和下划线,长度2~12', trigger: 'blur' },
   ],
   mobile: [
     { required: true, message: '请填写手机号', trigger: 'blur' },

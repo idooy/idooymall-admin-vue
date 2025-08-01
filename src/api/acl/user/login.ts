@@ -4,9 +4,9 @@ import type {
 } from '@/api/acl/user/type'
 
 enum API {
-    LOGIN_API = '/login',
-    LOGOUT_URL = '/logout',
-    PUBLIC_KEY_URL = '/rsa/pubkey'
+    LOGIN_API = '/admin/login',
+    LOGOUT_URL = '/admin/logout',
+    PUBLIC_KEY_URL = '/admin/rsa/pubkey'
 }
 
 /**

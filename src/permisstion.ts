@@ -8,7 +8,8 @@ nprogress.configure({ showSpinner: false })
 
 //如何在组件外使用store:https://pinia.vuejs.org/zh/core-concepts/outside-component-usage.html
 //里边明确给出“在 Vue Router 的导航守卫中使用 store 的例子”。
-import { userStore } from '@/store/user.ts'
+import { userModuleStore } from '@/store/user.ts'
+// import { storeToRefs } from 'pinia'
 
 
 // 路由前置守卫
@@ -19,10 +20,12 @@ router.beforeEach(async (to: any, from: any, next: any) => {
   //路由跳转的同时，进度条开始工作，在路由成功跳转完成以后的后置钩子中进度条需要手动终止
   nprogress.start()
   // 这就是pinia官方给出在路由导航中正确调用 useStore() 的地方
-  const user_tore = userStore()
-  const token = user_tore.token
-  const username = user_tore.username
-  const avatar = user_tore.avatar
+  const userStore = userModuleStore()
+  const token = userStore.token
+  const username = userStore.username
+  const avatar = userStore.avatar
+
+
   // 未登录状态可以访问的路由
   const anonymousUrl = ['/login']
 
@@ -53,7 +56,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
       if(username!='' && avatar!=''){
         next() // 有用户信息再放行
       }else{ // 没有用户信息就去请求
-        user_tore.userInfo()
+        userStore.userInfo()
         next()
       }
     }

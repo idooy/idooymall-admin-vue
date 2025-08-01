@@ -1,3 +1,4 @@
+
 /**创建VUE实例=== top */
 import { createApp } from 'vue'
 import App from '@/App.vue'
@@ -48,7 +49,11 @@ const pinia = createPinia()
 app.use(pinia)
 /**pinia===bottom*/
 
-
+/**UUID===top */
+// https://www.npmjs.com/package/vue3-uuid
+import UUID from "vue3-uuid";
+app.use(UUID)
+/**UUID===bottom*/
 
 app.mount('#app')
     

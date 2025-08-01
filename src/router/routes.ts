@@ -37,11 +37,11 @@ export const asyncRoutes = [
         name: 'Layout',
         component: () => import('@/layout/index.vue'),
         redirect: '/home',
-        meta: {
-            title: '',
-            hidden: false,
-            icon: '',
-        },
+        // meta: {
+        //     title: '',
+        //     hidden: false,
+        //     icon: '',
+        // },
         children: [
             {
                 path: '/home',
@@ -122,10 +122,20 @@ export const asyncRoutes = [
         },
         redirect: '/product/trademark', //重定向到第一个二级路由
         children: [
+             {
+                path: '/product/categories',
+                component: () => import('@/views/product/categories/index.vue'),
+                name: 'Categories',
+                meta: {
+                    title: '商品分类',
+                    hidden: false, //false可以去掉
+                    icon: 'ShoppingCart',
+                },
+            },
             {
-                path: '/product/trademark',
-                component: () => import('@/views/product/trademark/index.vue'),
-                name: 'Trademark',
+                path: '/product/brand',
+                component: () => import('@/views/product/brand/index.vue'),
+                name: 'Brand',
                 meta: {
                     title: '品牌管理',
                     hidden: false, //false可以去掉

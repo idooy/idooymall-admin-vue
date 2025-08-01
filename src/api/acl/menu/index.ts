@@ -2,8 +2,8 @@ import request from "@/api/request";
 import { MenuListData } from "@/api/acl/menu/type";
 
 const API = {
-    QUERY_CHILDREN_URL:'/menus/tree',
-    DEL_MENUS:'/menus'
+    QUERY_CHILDREN_URL:'/admin/menus/tree',
+    DEL_MENUS:'/admin/menus'
 }
 
 /**

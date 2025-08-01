@@ -29,12 +29,12 @@ import { User, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import { reqLogin } from '@/api/acl/user/login'
 import type { FormInstance, FormRules } from 'element-plus'
-import { userStore } from '@/store/user.ts'
+import { userModuleStore } from '@/store/user.ts'
 import { useRouter } from 'vue-router'
 import { encryption } from '@/utils/encrypt'
 
 let router = useRouter()
-let user_store = userStore()
+let userStore = userModuleStore()
 const loginRuleFormRef = ref<FormInstance>()
 //表单数据
 let loginForm = reactive({ username: 'idooy_admin', password: 'idooy_admin@123456' })
@@ -70,7 +70,7 @@ const submitLoginForm = (formEl: FormInstance | undefined) => {
       // 对密码进行加密后再发送登录请求
       const cryptPwd:string = await encryption(loginForm.password)
       reqLogin({"username": loginForm.username, "password": cryptPwd}).then(token=>{
-        user_store.registryToken(token)
+        userStore.registryToken(token)
         router.push({ path: '/' })
       })
     }

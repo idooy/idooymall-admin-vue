@@ -12,7 +12,7 @@
           <!-- <div > -->
           <el-menu class="menu-box" popper-effect="light" @select="selectHandle" :collapse="layoutStore.fold"
             :collapse-transition="false">
-            <d-slider-menu :menuList="menuList"></d-slider-menu>
+            <d-slider-menu :menuList="menuRoutes"></d-slider-menu>
           </el-menu>
           <!-- </div> -->
 
@@ -39,12 +39,17 @@ import DMain from '@/layout/DMain.vue'
 import DTabbar from '@/layout/DHeader.vue'
 //获取layout配置仓库
 import { useLayoutStore } from '@/store/layout_setting.ts'
-import { userStore } from '@/store/user'
+import { userModuleStore } from '@/store/user'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const layoutStore = useLayoutStore()
-const menuList = userStore().menuRoutes
+const userStore = userModuleStore()
+// const menuList = userStore.menuRoutes
+// 尝试使用解构语法
+const {menuRoutes} = storeToRefs(userStore)
+
 
 //点击菜单的回调，需要菜单绑定index属性
 const selectHandle = (path: string) => {

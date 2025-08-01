@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { asyncRoutes } from '@/router/routes.ts'
-import type { userInfoResponseData } from '@/api/acl/user/type'
 import { reqUserInfo } from '@/api/acl/user'
 import { reqLogout } from '@/api/acl/user/login';
 
@@ -10,7 +9,7 @@ const CONSTANT = {
 }
 export const localStorageTokenKey = CONSTANT.LOCAL_STORE_TOKEN_KEY
 // 创建一个名为 user_store 的仓库，返回的是一个函数
-export const userStore = defineStore(CONSTANT.USER_STORE_NAME, {
+export const userModuleStore = defineStore(CONSTANT.USER_STORE_NAME, {
 
     // 为了完整类型推理，推荐使用箭头函数
     state: () => {

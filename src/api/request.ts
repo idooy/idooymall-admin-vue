@@ -1,12 +1,12 @@
 //进行axios二次封装，使用请求和响应拦截器
 import { request } from '@/axios.ts'
 import { ElMessage } from 'element-plus'
-import { userStore, localStorageTokenKey } from '@/store/user.ts'
+import { userModuleStore, localStorageTokenKey } from '@/store/user.ts'
 
 
 //请求拦截器
 request.interceptors.request.use((config) => {
-  const user_store = userStore()
+  const user_store = userModuleStore()
   // 如果token存在就放到请求头中
   const token = user_store.token;
   if (token) {
