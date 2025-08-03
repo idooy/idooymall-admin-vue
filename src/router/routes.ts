@@ -145,7 +145,7 @@ export const asyncRoutes = [
             {
                 path: '/product/attr',
                 name: 'Attr',
-                component: () => import('@/views/product/attr/index.vue'),
+                component: () => import('@/views/product/attr/AttrGroup.vue'),
                 meta: {
                     title: '属性管理',
                     hidden: false,

@@ -1,7 +1,7 @@
 <template> 
   <div>
     <el-upload 
-      action="https://idooy-mall.oss-cn-chengdu.aliyuncs.com"
+      :action="host"
       :data="uploadParam"
       list-type="picture"
       :multiple="multiple"
@@ -24,7 +24,7 @@
 </template>
 <script setup lang="ts">
 import { policy } from '@/components/upload/policy'
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { PolicyData, type UploadParam } from '@/components/upload/type'
 import { uuid } from 'vue3-uuid';
 import { ElMessage, type UploadProps, type UploadUserFile,type UploadRequestOptions } from 'element-plus'
@@ -61,8 +61,8 @@ const props = defineProps({
 });
 // 定义父组件中的触发函数（触发父组件中的回调函数）
 const emit = defineEmits(['upload-success', 'upload-error']);
-
-
+const host = ref('https://idooy-mall.oss-cn-chengdu.aliyuncs.com')
+const fileName = ref<string>()
 const fileList = ref<UploadUserFile[]>([])
 const dialogVisible = ref<Boolean>(false)
 const policyData = ref<PolicyData>()
@@ -76,6 +76,11 @@ const uploadParam = reactive<UploadParam>({
     key:'',// 文件名；dir+fileName
     'x-oss-security-token': ''
 })
+const fileUrl = computed<string>(()=>{
+  return `${host+uploadParam.key}`
+})
+
+
 // const props = defineProps(['value'])
 // const emit = defineEmits(['input'])
 
@@ -86,7 +91,8 @@ const uploadParam = reactive<UploadParam>({
 const beforeUpload: UploadProps['beforeUpload'] = (rawFile) =>{
   // console.log("1111111",rawFile)
   // 拿到上传文件的原始文件名
-  const fileName = rawFile.name
+  fileName.value = rawFile.name
+
   return new Promise(async (resolve,reject) => {
     // 这里采用了STS验签的Web直传的方式，所以在上传之前要到服务器拿到STS临时凭证
     await policy().then(response => {
@@ -148,13 +154,13 @@ const handleUploadSuccess: UploadProps['onSuccess'] = (files, uploadFiles) => {
     // reShowPictureUrl.value =  `${signatureParam.value.host}/${signatureParam.value.dir}${uniqueName.value}`;
     // reshowFlag.value = true;
     // ElMessage.success('上传成功');
- 
+    fileList.value.push({
+      name:fileName.value as string,
+      url:fileUrl.value
+    })
     
-    // // 通知父组件执行下一步处理
-    // emit('upload-success', {
-    //     name: uniqueName.value,
-    //     url: reShowPictureUrl.value
-    // });
+    // 通知父组件执行下一步处理
+    emit('upload-success', fileUrl.value);
 };
  
 // 上传失败回调

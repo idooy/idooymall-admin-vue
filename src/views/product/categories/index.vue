@@ -47,7 +47,7 @@
 <script setup lang='ts'>
 import { reactive, ref, onMounted} from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { reqDataSourceTree, reqBatchDel,reqCreateCategory,reqModifyCategory } from '@/api/product/categories/categories'
+import { reqDataSourceTree, reqBatchDel,reqCreateCategory,reqModifyCategory } from '@/api/product/categories'
 import type { CategoryTreeData,CategoryCMForm,CategoryDropForm } from '@/api/product/categories/type'
 import type { Action, RenderContentContext,FormRules,FormInstance ,AllowDropType,NodeDropType } from 'element-plus'
 import type { DragEvents} from 'element-plus/es/components/tree/src/model/useDragNode'

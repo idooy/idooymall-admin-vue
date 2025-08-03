@@ -49,8 +49,8 @@
     <el-pagination 
       @size-change="getTableData()" 
       @current-change="getTableData()"
-      v-model:current-page="queryParams.currentPage" 
-      v-model:page-size="queryParams.pageSize" 
+      :current-page="queryParams.currentPage" 
+      :page-size="queryParams.pageSize" 
       :page-sizes="[5, 10]"
       :total="totalCount" 
       layout="sizes, prev, pager, next, jumper, ->, total" />
@@ -68,7 +68,7 @@
         </el-form-item>
         <el-form-item prop="logo" label="品牌Logo" label-width="100px">
           <!-- <el-input v-model="brandCMForm.logo"/> -->
-          <d-upload v-model="brandCMForm.logo"></d-upload>  
+          <d-upload v-model="brandCMForm.logo" @upload-success="uploadSuccessHandler"></d-upload>  
         </el-form-item>
         <el-form-item prop="firstLetter" label="首字母检索" label-width="100px">
           <el-input v-model="brandCMForm.firstLetter" placeholder="请输入品首字母检索" />
@@ -94,10 +94,11 @@
 
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue';
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules ,UploadUserFile} from 'element-plus'
 import {reqBrandTableData,reqSaveBrand,reqModifyBrand} from '@/api/product/brand'
 import type {BrandCMForm, BrandQueryPageForm,BrandTableData} from '@/api/product/brand/type'
 import DUpload from '@/components/upload/DUpload.vue'
+
 
 
 
@@ -114,7 +115,7 @@ const queryParams = reactive<BrandQueryPageForm>({
         showStatus: '',
     }
 })
-const totalCount = ref<number>()
+const totalCount = ref<number>(0)
 const tableData = ref<BrandTableData[]>([])
 const cmDialogVisible = ref<boolean>(false)
 const brandCMForm = reactive<BrandCMForm>({
@@ -146,6 +147,10 @@ const cmRules = reactive<FormRules<BrandTableData>>({
 })
 //==================================FUNCTION START==============================
 
+const uploadSuccessHandler=(url:string)=>{
+  brandCMForm.logo = url
+}
+
 // 初始化查询列表数据
 const initTableData = () => {
   getTableData()
@@ -153,7 +158,6 @@ const initTableData = () => {
 // 获取列表数据根据queryParams请求参数
 const getTableData = async () => {
   await reqBrandTableData(queryParams).then((res) => {
-    totalCount.value = res.totalCount
     queryParams.pageSize = res.pageSize
     queryParams.currentPage = res.currentPage
     totalCount.value = res.totalCount

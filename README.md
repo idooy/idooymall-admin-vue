@@ -1,117 +1,62 @@
-# 开发套路
-## 分页组件Pagination定义
-组件按如下定义属性，都是些常用的，也基本够用
+# 常用代码片段
+
+## 分页
 ```html
-    <el-pagination 
-      @size-change="getTableData()" 
-      @current-change="getTableData()" 
-      v-model:current-page="queryParams.currentPage"
-      v-model:page-size="queryParams.pageSize" 
-      :page-sizes="[5, 10, 20]" 
-      :total="totalCount"
-      layout="sizes, prev, pager, next, jumper, ->, total" />
+
+      <el-pagination 
+          @size-change="handleSizeChange" 
+          @current-change="handleCurrentChange"
+          :current-page="currentPage" 
+          :page-size="pageSize" 
+          :page-sizes="[5, 10]"
+          :total="totalCount" 
+          layout="sizes, prev, pager, next, jumper, ->, total"/>
 
 ```
-- @size-change:当‘每页条目数’发生变化，触发该事件；eg：“‘10条/页’”改变成“‘5条/页’”
-- @current-change：当‘当前页’发生了改变，触发该事件；eg:"跳到以及点击页码数"
-这两个改变无非就是再发送一次查询请求，因为把整个查询条件：当前页、每页条目数、检索条件都封装成在同一个对象中
-## 请求参数数据框架定义
+
+
 ```ts
-/**
- * 分页查询检索请求数据，数据结构定义
- */
-export interface QueryPage {
-    pageSize: number
-    currentPage: number
-    queryForm: {
-        // 这里定义查询表单字段
-    }
-}
-
-const queryParams = reactive<QueryPage>({
-  currentPage: 1,
-  pageSize: 10,
-  queryForm: {
-    // 编写查询表单字段
-  }
-})
-
-```
-- v-model:current-page="queryParams.currentPage"
-- v-model:page-size="queryParams.pageSize" 
-Pagination的v-model:current-page和v-model:page-size直接和请求查询参数对象的属性进行双向绑定，这样
-可以在以后发查询请求的时候不需要再关注这两个参数，关注点始终在queryParams这一个对象身上，以前不仅要关注每
-个表单数据，还要额外的关注ref定义的当前页和每页条目数这两个参数。
-到这里，就将每次分页查询请求参数的数据结构框架给确定下来了;还确定了pagination的v-model
-```ts
-export interface QueryPage {
-    pageSize: number
-    currentPage: number
-    queryForm: {
-        // 这里定义查询表单字段
-    }
-}
-
-```
-- total属性，这个是需要请求响应之后才能确定的
-总页数， total 和 page-count 设置任意一个就可以达到显示页码的功能；如果要支持 page-sizes 的更改，则需要使用 total 属性；所以选择了total
-## 请求发送以及响应结果集处理
-```ts
-  // 直接就带一个对象就好
-  await reqTableData(queryParams).then((res) => {
-    // 单独使用ref定义的
-    totalCount.value = res.totalCount
-    // totalPage.value = res.totalPage
-    // 双向绑定，当然要将响应后的数据赋值给请求参数对象，以便组件的v-model发挥作用
-    queryParams.pageSize  = res.pageSize
-    queryParams.currentPage = res.currentPage
-    // 这是列表数据，因为列表数据就是一个展示效果，习惯每次使用ref定义
-    tableData.value = Array.from(res.list)
-  })
-```
-```ts
-// =========================1、定义分页数据结构 ====只有响应数据结构使用Data结尾===================
-/**
- * 分页查询检索请求数据
- */
-export interface XXXQueryPage {
-    pageSize: number
-    currentPage: number
-    queryForm: {
-        roleName: string
-        remark: string
-        status: string
-    }
-}
-/**
- * 分页查询结果集
- */
-export interface XXXTablePageData {
-    totalCount: number
-    pageSize: number
-    totalPage: number
-    currentPage: number
-    list: XXXTableData[]
-}
-
-// ===================2、声明响应式对象====================
-
 const totalCount = ref<number>(0)
+const currentPage = ref<number>(1)
+const pageSize = ref<number>(10)
 
 
-const tableData = ref<XXXTableData[]>([])
-const queryParams = reactive<XXXueryPage>({
-  currentPage: 1,
-  pageSize: 10,
-  queryForm: {
-    roleName: '',
-    remark: '',
-    status: ''
-  }
-})
+/**
+ * 查询列表数据
+ */
+const getDataList = async ()=>{
+    await reqAttrGroupTableData(currentPage.value,pageSize.value,queryParams).then(res=>{
+        dataList.value =Array.from(res.list)
+        totalCount.value = res.totalCount
+    })
+}
+
+
+const handleSizeChange = (val: number) => {
+  pageSize.value = val
+  getDataList()
+}
+const handleCurrentChange = (val: number) => {
+    currentPage.value = val
+    getDataList()    
+}
 
 ```
+## 删除气泡确认
+```html
+      <el-table-column label="操作" width="180" align="center" >
+        <template #default="scope">
+          <!-- <el-button type="success" size="large" @click="gotoEdit(scope.row)">编辑</el-button> -->
+          <el-popconfirm title="确认删除?" @confirm="doDelRoleHandler(scope.row)">
+            <template #reference>
+              <el-button size="small" type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
 
+
+```
 
 
 

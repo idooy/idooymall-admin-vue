@@ -33,11 +33,11 @@ router.beforeEach(async (to: any, from: any, next: any) => {
     if (anonymousUrl.includes(to.path)) {// 访问的是匿名路由就放行
       next()
     } else { // 访问的不是匿名路由,得强制跳转到‘/login'
-      ElMessage({
-        message: '请进行登录~',
-        type: 'error',
-        plain: true,
-      })
+      // ElMessage({
+      //   message: '请进行登录~',
+      //   type: 'error',
+      //   plain: true,
+      // })
       // 把用户打算前往的路由给‘/login’带上，如果用户登录成功直接跳转曾经想去的路由
       // next({ path: "/login" })
       next({ path: "/login", query: { redirect: to.path } })

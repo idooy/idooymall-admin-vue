@@ -17,8 +17,8 @@ export interface BrandCMForm {
  * 分页查询检索请求数据
  */
 export interface BrandQueryPageForm {
-    pageSize: number
-    currentPage: number
+    pageSize: number | 10
+    currentPage: number | 1
     queryForm: {
         name: string
         showStatus: number | string

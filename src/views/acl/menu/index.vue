@@ -25,9 +25,12 @@
           <el-button v-if="scope.row.type.key == 0" size="small" type="primary" @click="addMenuHandle()">添加菜单</el-button>
           <el-button v-if="scope.row.type.key == 1" size="small" type="success" @click="addButtHandle()">添加按钮</el-button>
           <el-button color="#626aef" size="small" @click="edit(scope.row)">编辑</el-button>
-          <el-popconfirm title="确认删除?" @confirm="doDelMenuHandler(scope.row)">
+          <el-popconfirm title="确认删除?" v-if="scope.row.children && scope.row.children.length == 0" @confirm="doDelMenuHandler(scope.row)">
             <template #reference>
-              <el-button size="small" v-if="scope.row.children && scope.row.children.length == 0" type="danger">删除</el-button>
+              <!-- 控制台警告：ElementPlusError: [ElOnlyChild] no valid child node found；因为v-if作用在了button上-->
+              <!-- <el-button size="small" v-if="scope.row.children && scope.row.children.length == 0" type="danger">删除</el-button> -->
+              <el-button size="small" type="danger">删除</el-button>
+              <!-- 消除警告解决办法就是：将v-if作用在外层的popconfirm -->
             </template>
           </el-popconfirm>
         </template>
@@ -176,7 +179,7 @@ const doAddDirHandler = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      console.log('submit!')
+      
     }
     dirDialogVisible.value = false
     ruleDirForm.name = ''
