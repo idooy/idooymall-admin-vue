@@ -1,8 +1,44 @@
 import request from '@/api/request'
-import { BrandQueryPageForm,BrandTablePage,BrandCMForm } from '@/api/product/brand/type'
+import { BrandQueryPageForm,BrandTablePage,BrandCMForm,BrandRelTablePage,BrandRelTableData } from '@/api/product/brand/type'
 
 enum API{
-    URL='/product/brands'
+    URL='/product/brands',
+    REL_URL='/product/brands/relations'
+}
+
+/**
+ * 添加品牌关联的分类信息
+ * @param param 
+ * @returns 
+ */
+export const reqSaveBrandRel =(data:BrandRelTableData)=>{
+    const url = `${API.REL_URL}`
+    return request.post<any,void>(url,data)
+}
+/**
+ * 查询品牌关联的分类信息
+ * @param param 
+ * @returns 
+ */
+export const reqCategoryByBrandId =(currentPage:number,pageSize:number,brandId:number)=>{
+    const url = `${API.REL_URL}/${currentPage}/${pageSize}`
+    return request.get<any,BrandRelTablePage>(url,{params:{brandId}})
+}
+/**
+ * 删除品牌与分类的关联数据
+ * @param param 
+ * @returns 
+ */
+export const reqDelBrandRel =(id:number[])=>{
+    return request.delete(`${API.REL_URL}`,{data:id})
+}
+/**
+ * 批量删除品牌数据
+ * @param param 
+ * @returns 
+ */
+export const reqDelBrand =(ids:number[])=>{
+    return request.delete(`${API.URL}`,{data:ids})
 }
 
 /**
@@ -28,8 +64,8 @@ export const reqSaveBrand =(param:BrandCMForm)=>{
  * @param param 
  * @returns 
  */
-export const reqBrandTableData =(param:BrandQueryPageForm)=>{
-    return request.get<any,BrandTablePage>(`${API.URL}/${param.currentPage}/${param.pageSize}`,{params:param.queryForm})
+export const reqBrandTableData =(currentPage:number,pageSize:number,param:BrandQueryPageForm)=>{
+    return request.get<any,BrandTablePage>(`${API.URL}/${currentPage}/${pageSize}`,{params:param})
 }
 
 /**

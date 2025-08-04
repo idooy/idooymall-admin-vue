@@ -1,14 +1,27 @@
 /**
  * 新增或者修改表单数据模型
  */
+export interface BrandRelTableData {
+    brandId: string
+    id?:string
+    categoryId:string
+    brandName?:string
+    categoryName?:string
+}
+
+
+
+/**
+ * 新增或者修改表单数据模型
+ */
 export interface BrandCMForm {
     brandId: string
     name: string
     logo: string
     brandDescribe: string
     firstLetter: string
-    sort:string
-    showStatus:string
+    sort: string
+    showStatus: string
 }
 
 
@@ -17,12 +30,11 @@ export interface BrandCMForm {
  * 分页查询检索请求数据
  */
 export interface BrandQueryPageForm {
-    pageSize: number | 10
-    currentPage: number | 1
-    queryForm: {
-        name: string
-        showStatus: number | string
-    }
+
+
+    name: string
+    showStatus: number | string
+
 }
 
 /**
@@ -35,7 +47,7 @@ export interface BrandTableData {
     brandDescribe: string
     showStatus: string
     firstLetter: string
-    sort:string
+    sort: string
 }
 
 /**
@@ -47,4 +59,11 @@ export interface BrandTablePage {
     totalPage: number
     currentPage: number
     list: BrandTableData[]
+}
+export interface BrandRelTablePage {
+    totalCount: number
+    pageSize: number
+    totalPage: number
+    currentPage: number
+    list: BrandRelTableData[]
 }

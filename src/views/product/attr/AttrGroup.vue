@@ -1,5 +1,5 @@
 <template>
-<span style="padding: 5px;color:#409eff">列表展示左边所选分类下的数据，否则默认查询所有分类下的属性分组信息</span>
+<span style="padding: 5px;color:#409eff">默认查询全部分组信息；可选择三级分类，查询对应分类下的属性分组信息。</span>
 <el-card>
     <el-row :gutter="20">
         <!-- category-tree-node-click 这个事件名是子组件中自己定义的，向上传递事件 -->

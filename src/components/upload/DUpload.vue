@@ -61,7 +61,7 @@ const props = defineProps({
 });
 // 定义父组件中的触发函数（触发父组件中的回调函数）
 const emit = defineEmits(['upload-success', 'upload-error']);
-const host = ref('https://idooy-mall.oss-cn-chengdu.aliyuncs.com')
+const host = ref<string>()
 const fileName = ref<string>()
 const fileList = ref<UploadUserFile[]>([])
 const dialogVisible = ref<Boolean>(false)
@@ -77,7 +77,7 @@ const uploadParam = reactive<UploadParam>({
     'x-oss-security-token': ''
 })
 const fileUrl = computed<string>(()=>{
-  return `${host+uploadParam.key}`
+  return `${host.value}${uploadParam.key}`
 })
 
 
@@ -96,22 +96,16 @@ const beforeUpload: UploadProps['beforeUpload'] = (rawFile) =>{
   return new Promise(async (resolve,reject) => {
     // 这里采用了STS验签的Web直传的方式，所以在上传之前要到服务器拿到STS临时凭证
     await policy().then(response => {
-    
       uploadParam.policy = response.policy;
       uploadParam['x-oss-signature'] = response.signature;
       uploadParam['x-oss-credential'] = response.x_oss_credential;
       uploadParam['x-oss-security-token'] = response.security_token
       uploadParam['x-oss-date'] = response.x_oss_date;
       uploadParam['x-oss-signature-version'] = response.version;
-      uploadParam.key = `${response.dir}/${uuid.v4()}${fileName}`;
-      // if(response){
-      //   policyData.value = response
-      // }
+      uploadParam.key = `${response.dir}/${uuid.v4()}${rawFile.name}`;
+      host.value = response.host
       resolve(true)
-    }).catch(err=>{
-      console.log(err)
-      reject(false)
-    })
+    }).catch(err=>{ reject(false) })
   })
 }
 
@@ -147,13 +141,13 @@ const uploadOtherParam = async (options: UploadRequestOptions) => {
  
 // 上传成功回调
 const handleUploadSuccess: UploadProps['onSuccess'] = (files, uploadFiles) => {
-    console.log("上传成功22===>>>", files);
+    console.log("上传成功22===>>>", fileUrl);
     console.log("上传成功22======>>>", uploadFiles);
     
     // // 构造图片回显
     // reShowPictureUrl.value =  `${signatureParam.value.host}/${signatureParam.value.dir}${uniqueName.value}`;
     // reshowFlag.value = true;
-    // ElMessage.success('上传成功');
+    ElMessage.success('上传成功');
     fileList.value.push({
       name:fileName.value as string,
       url:fileUrl.value
