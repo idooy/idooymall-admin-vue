@@ -1,3 +1,95 @@
+# 父组件控制子组件Dialog开关
+1、父组件定义一个boolean类型响应式数据`dialogShow`
+```ts
+const dialogShow = ref(false)
+```
+2、将`dialogShow`传递给子组件
+
+```ts
+// 1、父组件这样传递
+<d-attr-create-modify v-if="dialogShow" :visiable="dialogShow"/>
+// 2、子组件定义属性visiable接受
+const props = defineProps<{
+  visiable: boolean
+  // attrId: number
+}>()
+
+```
+3、因为visiable属性值在子组件中仅可读，所以将其赋值给子组件自定义的ref响应式数据,
+```ts
+const dialogVisiable = ref(props.visiable)
+// 这样子组件中就可以通过dialogVisiable来实现响应式
+```
+4、监听props.visiable，实现它与dialogVidiable强绑定实现实时更新数据
+```ts
+watch(() => props.visiable, (newVal) => {
+  dialogVisiable.value = newVal
+})
+```
+5、如果子组件关闭了dialog，还需要通知父组件来改变开关值
+```ts
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+const dialogClose = ()=>{
+  emit('close')
+}
+```
+6、父组件关闭
+```ts
+<d-attr-create-modify v-if="dialogShow" 
+        :visiable="dialogShow"
+        @close="closeCMDialog"
+    :attr-id="attrId"></d-attr-create-modify>
+
+const closeCMDialog =()=>{
+    dialogShow.value = false
+}
+
+```
+7、总结
+7.1、父组件代码片段
+```ts
+<d-attr-create-modify v-if="dialogShow" :visiable="dialogShow" @close="closeCMDialog"/>
+
+const dialogShow = ref(false)
+
+const closeCMDialog =()=>{
+    dialogShow.value = false
+}
+
+```
+7.2、子组件代码片段
+```ts
+  <el-dialog 
+    v-model="dialogVisiable"
+    @closed="dialogClose"
+  >
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisiable = false">取消</el-button>
+    </span>
+  </el-dialog>
+
+
+const props = defineProps<{
+  visiable: boolean
+  attrId: number
+}>()
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+const dialogVisiable = ref(props.visiable)
+const dialogClose = ()=>{
+  emit('close')
+}
+watch(() => props.visiable, (newVal) => {
+  dialogVisiable.value = newVal
+})
+
+```
+
+
+
 # 常用代码片段
 
 ## 分页

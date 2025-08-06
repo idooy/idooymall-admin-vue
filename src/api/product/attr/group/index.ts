@@ -1,6 +1,6 @@
 import request from '@/api/request'
-import { QueryAttrGroupForm,TablePage,AttrGroupTableData } from '@/api/product/attr/type'
-
+import { QueryAttrGroupForm,TablePage,AttrGroupTableData,AttrGroupOption, QueryNotRelationParam} from '@/types/product/attrGroup'
+import {AttrRelationPageData} from '@/types/product/attr'
 enum Api{
     ATTR_GROUP_URL='/product/attr/groups'
 }
@@ -8,6 +8,27 @@ enum Api{
 
 
 
+/**
+ * 查询属性分组还没有被关联的基本属性列表数据
+ * @param param 
+ */
+export const reqQueryNotRelationAttr =(params:QueryNotRelationParam)=>{
+    let attrGroupId = params.attrGroupId
+    const reqUrl = `${Api.ATTR_GROUP_URL}/${attrGroupId}/not/relation`
+    return request.get<any,AttrRelationPageData>(reqUrl,{params:{
+        currentPage:params.currentPage,
+        pageSize:params.pageSize,
+        key:params.key
+    }})
+}
+/**
+ * 查询指定分类下的属性分组列表
+ * @param param 
+ */
+export const reqAttrGroupListByCategoryId =(categoryId:number)=>{
+    const reqUrl = `${Api.ATTR_GROUP_URL}`
+    return request.get<any,AttrGroupOption[]>(reqUrl,{params:{categoryId}})
+}
 /**
  * 查询属性分组列表数据
  * @param param 

@@ -63,7 +63,7 @@
 
 <script setup lang='ts'>
 import { ref, reactive,onMounted } from 'vue'
-import type { AttrGroupTableData } from '@/api/product/attr/type'
+import type { AttrGroupTableData } from '@/types/product/attrGroup'
 import { ElMessage, FormInstance, FormRules } from 'element-plus';
 import {reqDataSourceTree} from '@/api/product/categories'
 import { CategoryTreeData } from '@/api/product/categories/type';

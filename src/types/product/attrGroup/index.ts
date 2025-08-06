@@ -15,6 +15,11 @@ export interface QueryAttrGroupForm {
 
 }
 
+// 属性分组下拉框
+export interface AttrGroupOption{
+    attrGroupName:string
+    attrGroupId:number
+}
 
 /**
  * 分页查询结果集
@@ -25,4 +30,19 @@ export interface TablePage {
     totalPage: number
     currentPage: number
     list: AttrGroupTableData[]
+}
+
+/**
+ * 查询分组还没有被关联的属性，所需要的请求参数都封装到这里
+ */
+export interface QueryNotRelationParam{
+    currentPage:number
+    pageSize:number
+    attrGroupId:number
+    key:string
+}
+
+export interface RelationIncrForm{
+    attrId:number,
+    attrGroupId:number
 }

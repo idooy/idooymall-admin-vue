@@ -4,5 +4,5 @@ import axios from 'axios'
 export const request = axios.create({
   //基础路径
   baseURL: import.meta.env.VITE_SERVE_URL,
-  timeout: 5000,
+  timeout: 10000,
 })

@@ -93,7 +93,7 @@
     </template>
   </el-dialog>
   <!-- 关联分类 Drawer-->
-  <el-dialog v-model="relDialogVisiable" width="800">
+  <el-dialog v-model="relDialogVisiable" width="600">
     <template #header>
       <h4>品牌关联分类信息</h4>
     </template>
@@ -126,7 +126,7 @@
         v-model="innerVisible" width="500" title="添加品牌的分类" append-to-body>
           <el-form :inline="true" :model="relationForm" class="demo-form-inline">
               <el-form-item label="请选择分类信息">
-                  <d-category-cascader @selected="getSelCategoryId"></d-category-cascader>              
+                  <d-category-cascader @selectChange="getSelCategoryId"></d-category-cascader>              
                 <!-- <el-input v-model="relationForm.categoryId" placeholder="请选择分类信息" clearable /> -->
             </el-form-item>
           </el-form>
@@ -221,11 +221,11 @@ const submitRelations=async ()=>{
 
 
 // 拿到级联选择器选中的分类数据
-const getSelCategoryId=(lastCategoryId:string)=>{
-  // const lastCategoryId = toRaw(selectedResult)
+const getSelCategoryId=(categoryPath:number[])=>{
+  const lastCategoryId =categoryPath[categoryPath.length-1]
   // 只要之后一级分类ID
   // console.log(lastCategoryId)
-  relationForm.categoryId = lastCategoryId
+  relationForm.categoryId = lastCategoryId + ''
 
 }
 
