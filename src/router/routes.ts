@@ -184,6 +184,30 @@ export const asyncRoutes = [
             },
         ],
     },
+    // 会员管理
+    {
+        path: '/member',
+        component: () => import('@/layout/index.vue'),
+        name: 'Member',
+        meta: {
+            title: '会员管理',
+            hidden: false,
+            icon: 'Goods',
+        },
+        redirect: '/member/level', //重定向到第一个二级路由
+        children: [
+             {
+                path: '/member/level',
+                component: () => import('@/views/member/level/index.vue'),
+                name: 'Level',
+                meta: {
+                    title: '会员等级',
+                    hidden: false, //false可以去掉
+                    icon: 'ShoppingCart',
+                },
+            }
+        ],
+    },
 
     
 ]

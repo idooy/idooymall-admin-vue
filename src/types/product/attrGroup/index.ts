@@ -12,6 +12,7 @@ export interface QueryAttrGroupForm {
 
     key: string
     categoryId: string
+    attrType:string
 
 }
 

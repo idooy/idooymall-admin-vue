@@ -6,6 +6,12 @@
                 <d-category-cascader @select-change="selectedCategoryId"></d-category-cascader>
             </el-form-item>
             <el-form-item>
+                <el-select v-model="queryParams.attrType" placeholder="可选择属性类型查询" style="width: 180px" clearable>
+                    <el-option v-for="item in attrTypeOptions" :key="item.value" :label="item.label"
+                        :value="item.value" />
+                </el-select>
+            </el-form-item>
+            <el-form-item>
                 <el-input v-model="queryParams.key" placeholder="支持属性id\属性名模糊查询" clearable
                     style="width: 200px"></el-input>
             </el-form-item>
@@ -14,7 +20,7 @@
             </el-form-item>
         </el-form>
         <el-button type="primary" @click="toAddAttr">新增属性</el-button>
-        <el-table :data="dataList" border :show-overflow-tooltip="true" style="width: 100%;margin: 15px 0;">
+        <el-table :data="dataList" border :show-overflow-tooltip="true" style="width: 100%;margin: 15px 0;" stripe>
             <el-table-column type="selection" header-align="center" align="center" width="50">
             </el-table-column>
             <el-table-column prop="attrId" header-align="center" align="center" label="属性ID" width="55">
@@ -27,8 +33,13 @@
                     </el-table-column> -->
             <!-- <el-table-column prop="icon" header-align="center" align="center" label="图标">
                     </el-table-column> -->
-            <!-- <el-table-column prop="valueSelect" width="40" header-align="center" align="center" label="可选值">
-                    </el-table-column> -->
+            <el-table-column prop="valueSelect" label="可选值">
+                <template #default="{ row }">
+                    <el-tag v-for="tag in row.valueSelect" :key="tag" type="primary">
+                        {{ tag }}
+                    </el-tag>
+                </template>
+            </el-table-column>
             <!-- <el-table-column prop="valueType" header-align="center" align="center" label="值类型">
                     </el-table-column>
                     <el-table-column prop="attrType" header-align="center" align="center" label="属性类型">
@@ -37,11 +48,11 @@
             <!-- </el-table-column> -->
             <!-- <el-table-column prop="attrGroupId" header-align="center" align="center" label="分组ID">
                     </el-table-column> -->
-            <el-table-column prop="attrGroupName" header-align="center" align="center" label="分组名">
-            </el-table-column>
+            <!-- <el-table-column prop="attrGroupName" header-align="center" align="center" label="分组名">
+            </el-table-column> -->
             <!-- <el-table-column prop="categoryId" header-align="center" align="center" label="分类ID">
                     </el-table-column> -->
-            <el-table-column prop="catalogName" header-align="center" align="center" label="分类名称">
+            <el-table-column prop="catalogName" header-align="center" align="center" label="分类名称" width="120">
             </el-table-column>
             <el-table-column fixed="right" header-align="center" align="center" width="180" label="操作">
                 <template #default="scope">
@@ -60,10 +71,7 @@
             layout="sizes, prev, pager, next, jumper, ->, total" />
     </el-card>
 
-    <d-attr-create-modify v-if="dialogShow" 
-        :visiable="dialogShow"
-        @close="closeCMDialog"
-    :attr-id="attrId"></d-attr-create-modify>
+    <d-attr-create-modify v-if="dialogShow" :visiable="dialogShow" @close="closeCMDialog":attr-id="attrId" @submit-success="getDataList"/>
 
 
 </template>
@@ -75,7 +83,7 @@ import DCategoryCascader from '@/components/product/DCategoryCascader.vue';
 import { reactive, ref, onMounted } from 'vue';
 import { FormRules } from 'element-plus';
 import type { QueryAttrGroupForm, AttrGroupTableData } from '@/types/product/attrGroup';
-import { reqAttrTableData ,reqBatchDeleteAttr} from '@/api/product/attr'
+import { reqAttrTableData, reqBatchDeleteAttr } from '@/api/product/attr'
 import type { AttrTableData } from '@/types/product/attr'
 import DAttrCreateModify from '@/components/product/DAttrCreateModify.vue'
 
@@ -83,11 +91,23 @@ onMounted(() => {
     getDataList()
 })
 
+
+const attrTypeOptions = [
+    {
+        value: '1',
+        label: '规格参数',
+    },
+    {
+        value: '0',
+        label: '销售属性',
+    }
+]
 const dialogShow = ref(false)
 const attrId = ref<number>(0)
 const queryParams = reactive<QueryAttrGroupForm>({
     key: '',
-    categoryId: ''
+    categoryId: '',
+    attrType: ''
 })
 const totalCount = ref<number>(0)
 const currentPage = ref<number>(1)
@@ -113,7 +133,7 @@ const toEdit = (row: AttrTableData) => {
     dialogShow.value = true
 }
 // 子组件通知关闭dialog
-const closeCMDialog =()=>{
+const closeCMDialog = () => {
     dialogShow.value = false
 }
 // 点击'新增属性‘
