@@ -12,7 +12,7 @@ export interface QueryAttrGroupForm {
 
     key: string
     categoryId: string
-    attrType:string
+    attrType?:string
 
 }
 
@@ -47,3 +47,32 @@ export interface RelationIncrForm{
     attrId:number,
     attrGroupId:number
 }
+
+
+/**
+ * 属性分组和它关联的属性
+ */
+export interface AttrGroupWithAttr {
+     attrGroupId: number;
+     attrGroupName: string;
+     sort: number;
+     describe?: any;
+     icon: string;
+     catalogId: number;
+     attrs: Array<Attrs>;
+};
+
+export interface Attrs {
+     attrId: number;
+     attrName: string;
+     searchType: number;
+     icon: string;
+     valueSelect: string;
+     valueType: number;
+     attrType: number;
+     enable: number;
+     categoryId: number;
+     showDesc: number;
+};
+
+export type AttrGroupWithAttrList = AttrGroupWithAttr[]

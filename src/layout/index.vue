@@ -51,6 +51,7 @@ const userStore = userModuleStore()
 const {menuRoutes} = storeToRefs(userStore)
 
 
+
 //点击菜单的回调，需要菜单绑定index属性
 const selectHandle = (path: string) => {
   router.push(path)

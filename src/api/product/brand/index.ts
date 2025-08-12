@@ -1,11 +1,21 @@
 import request from '@/api/request'
-import { BrandQueryPageForm,BrandTablePage,BrandCMForm,BrandRelTablePage,BrandRelTableData } from '@/api/product/brand/type'
-
+import { BrandQueryPageForm,BrandTablePage,BrandCMForm,BrandRelTablePage,BrandRelTableData ,BrandOptionData} from '@/api/product/brand/type'
 enum API{
     URL='/product/brands',
     REL_URL='/product/brands/relations'
 }
 
+
+
+/**
+ * 获取所有品牌的下拉框值
+ * @param param 
+ * @returns 
+ */
+export const reqBrandOptionList =()=>{
+    const url = `${API.URL}/options`
+    return request.get<any,BrandOptionData[]>(url)
+}
 /**
  * 添加品牌关联的分类信息
  * @param param 

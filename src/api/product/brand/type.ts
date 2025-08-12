@@ -9,7 +9,13 @@ export interface BrandRelTableData {
     categoryName?:string
 }
 
-
+/**
+ * 定义品牌下拉框数据结构
+ */
+export interface BrandOptionData{
+    brandId:number,
+    brandName:string
+}
 
 /**
  * 新增或者修改表单数据模型

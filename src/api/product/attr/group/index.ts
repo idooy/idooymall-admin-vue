@@ -1,5 +1,5 @@
 import request from '@/api/request'
-import { QueryAttrGroupForm,TablePage,AttrGroupTableData,AttrGroupOption, QueryNotRelationParam} from '@/types/product/attrGroup'
+import { QueryAttrGroupForm,TablePage,AttrGroupTableData,AttrGroupOption, QueryNotRelationParam,AttrGroupWithAttrList} from '@/types/product/attrGroup'
 import {AttrRelationPageData} from '@/types/product/attr'
 enum Api{
     ATTR_GROUP_URL='/product/attr/groups'
@@ -20,6 +20,14 @@ export const reqQueryNotRelationAttr =(params:QueryNotRelationParam)=>{
         pageSize:params.pageSize,
         key:params.key
     }})
+}
+/**
+ * 查询指定分类下的属性分组以及关联的属性
+ * @param param 
+ */
+export const reqGroupWithAttrByCategoryId =(categoryId:number)=>{
+    const reqUrl = `${Api.ATTR_GROUP_URL}/${categoryId}/withAttr`
+    return request.get<any,AttrGroupWithAttrList>(reqUrl)
 }
 /**
  * 查询指定分类下的属性分组列表

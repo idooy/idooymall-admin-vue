@@ -37,11 +37,11 @@ export const asyncRoutes = [
         name: 'Layout',
         component: () => import('@/layout/index.vue'),
         redirect: '/home',
-        // meta: {
-        //     title: '',
-        //     hidden: false,
-        //     icon: '',
-        // },
+        meta: {
+            title: '控制面板',
+            hidden: false,
+            icon: 'Memo',
+        },
         children: [
             {
                 path: '/home',
@@ -127,9 +127,9 @@ export const asyncRoutes = [
                 component: () => import('@/views/product/categories/index.vue'),
                 name: 'Categories',
                 meta: {
-                    title: '商品分类',
+                    title: '三级分类',
                     hidden: false, //false可以去掉
-                    icon: 'ShoppingCart',
+                    icon: 'Histogram',
                 },
             },
             {
@@ -139,7 +139,7 @@ export const asyncRoutes = [
                 meta: {
                     title: '品牌管理',
                     hidden: false, //false可以去掉
-                    icon: 'ShoppingCart',
+                    icon: 'CreditCard',
                 },
             },
             {
@@ -149,7 +149,7 @@ export const asyncRoutes = [
                 meta: {
                     title: '属性分组',
                     hidden: false,
-                    icon: 'Wallet',
+                    icon: 'Shop',
                 },
             },
             {
@@ -182,6 +182,16 @@ export const asyncRoutes = [
                     icon: 'Suitcase',
                 },
             },
+            {
+                path: '/product/publish',
+                name: 'Publish',
+                component: () => import('@/views/product/publish/index.vue'),
+                meta: {
+                    title: '发布商品',
+                    hidden: false,
+                    icon: 'FolderChecked',
+                },
+            },
         ],
     },
     // 会员管理
@@ -192,7 +202,7 @@ export const asyncRoutes = [
         meta: {
             title: '会员管理',
             hidden: false,
-            icon: 'Goods',
+            icon: 'UserFilled',
         },
         redirect: '/member/level', //重定向到第一个二级路由
         children: [
@@ -203,7 +213,7 @@ export const asyncRoutes = [
                 meta: {
                     title: '会员等级',
                     hidden: false, //false可以去掉
-                    icon: 'ShoppingCart',
+                    icon: 'List',
                 },
             }
         ],
